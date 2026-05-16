@@ -1,13 +1,8 @@
-import { Calendar, Users, GraduationCap, Target, BookOpen, Award, Sparkles, Heart, Globe, Clock, Zap, Shield, Star, ChevronRight, Quote, Building2, Library, FlaskConical, Trophy, Laptop, Dumbbell, MapPin, Phone, Mail, MessageCircle, Code, PenLine, Send, BookMarked, NotebookPen } from "lucide-react";
+import { Calendar, Users, GraduationCap, Target, BookOpen, Award, Sparkles, Heart, Globe, Clock, Zap, Shield, Star, ChevronRight, Quote, Building2, Library, FlaskConical, Trophy, Laptop, Dumbbell, CheckCircle, MapPin, Phone, Mail, MessageCircle, Code } from "lucide-react";
 import { useState, useEffect } from "react";
 
 export function About() {
-  const [stories, setStories] = useState(() => {
-    const saved = localStorage.getItem("schoolStories");
-    return saved ? JSON.parse(saved) : [];
-  });
-  const [newStory, setNewStory] = useState({ name: "", content: "" });
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isVisible, setIsVisible] = useState({});
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -24,33 +19,6 @@ export function About() {
     document.querySelectorAll('.animate-on-scroll').forEach((el) => observer.observe(el));
     return () => observer.disconnect();
   }, []);
-
-  // localStorage ga saqlash
-  useEffect(() => {
-    localStorage.setItem("schoolStories", JSON.stringify(stories));
-  }, [stories]);
-
-  const addStory = () => {
-    if (!newStory.name.trim() || !newStory.content.trim()) {
-      alert("Iltimos, ismingizni va voqeangizni yozing!");
-      return;
-    }
-
-    setIsSubmitting(true);
-    
-    const story = {
-      id: Date.now(),
-      name: newStory.name,
-      content: newStory.content,
-      date: new Date().toLocaleDateString("uz-UZ"),
-      time: new Date().toLocaleTimeString("uz-UZ", { hour: '2-digit', minute: '2-digit' })
-    };
-
-    setStories([story, ...stories]);
-    setNewStory({ name: "", content: "" });
-    
-    setTimeout(() => setIsSubmitting(false), 500);
-  };
 
   const stats = [
     { icon: Calendar, value: "?", label: "Tashkil topgan", color: "blue" },
@@ -118,15 +86,6 @@ export function About() {
         .hover-lift:hover {
           transform: translateY(-4px);
           box-shadow: 0 20px 25px -12px rgba(0, 0, 0, 0.15);
-        }
-        
-        .story-card {
-          transition: all 0.3s ease;
-        }
-        
-        .story-card:hover {
-          transform: translateY(-5px) rotateX(2deg);
-          box-shadow: 0 25px 40px -12px rgba(0, 0, 0, 0.2);
         }
         
         .gradient-text {
@@ -341,106 +300,6 @@ export function About() {
               </div>
             ))}
           </div>
-        </div>
-
-        {/* Qiziqarli Voqealar Bo'limi */}
-        <div className="mb-16">
-          <div className="text-center mb-8">
-            <BookMarked className="w-8 h-8 text-orange-500 dark:text-orange-400 mx-auto mb-2" />
-            <h2 className="text-3xl font-bold text-gray-800 dark:text-white">📖 Qiziqarli voqealar</h2>
-            <p className="text-gray-500 dark:text-gray-400 mt-2">Siz ham o'z voqeangizni qoldiring</p>
-          </div>
-
-          {/* Yangi voqea yozish formasi */}
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mb-8 hover-lift">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-500 rounded-full flex items-center justify-center">
-                <PenLine className="w-5 h-5 text-white" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-800 dark:text-white">Voqea yozish</h3>
-            </div>
-            
-            <div className="space-y-4">
-              <input
-                type="text"
-                placeholder="Ismingiz"
-                value={newStory.name}
-                onChange={(e) => setNewStory({ ...newStory, name: e.target.value })}
-                className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-900 dark:text-white"
-              />
-              <textarea
-                placeholder="Maktabingizdagi qiziqarli voqeani yozing..."
-                value={newStory.content}
-                onChange={(e) => setNewStory({ ...newStory, content: e.target.value })}
-                rows={4}
-                className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-900 dark:text-white resize-none"
-              />
-              <button
-                onClick={addStory}
-                disabled={isSubmitting}
-                className="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white py-3 rounded-xl font-medium hover:shadow-lg transition flex items-center justify-center gap-2"
-              >
-                <Send className="w-4 h-4" />
-                {isSubmitting ? "Yuborilmoqda..." : "Voqeani yuborish"}
-              </button>
-            </div>
-          </div>
-
-          {/* Voqealar ro'yxati - Kitob varoqlari ochilgandek */}
-          {stories.length === 0 ? (
-            <div className="text-center py-12 bg-gray-50 dark:bg-gray-800/50 rounded-2xl">
-              <NotebookPen className="w-16 h-16 text-gray-400 mx-auto mb-3" />
-              <p className="text-gray-500 dark:text-gray-400">Hali hech qanday voqea yozilmagan</p>
-              <p className="text-sm text-gray-400 dark:text-gray-500">Birinchi bo'lib o'z voqeangizni yozing!</p>
-            </div>
-          ) : (
-            <div className="grid md:grid-cols-2 gap-6">
-              {stories.map((storyItem, storyIdx) => (
-                <div
-                  key={storyItem.id}
-                  className="story-card bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden border-l-4 border-l-orange-500 hover:shadow-xl transition-all"
-                  style={{ animationDelay: `${storyIdx * 0.1}s` }}
-                >
-                  <div className="p-5 relative">
-                    <div className="absolute top-2 right-2 opacity-10">
-                      <BookMarked className="w-16 h-16 text-gray-400" />
-                    </div>
-                    
-                    <div className="flex items-start gap-3 mb-3">
-                      <div className="w-10 h-10 bg-gradient-to-br from-orange-400 to-red-400 rounded-full flex items-center justify-center flex-shrink-0">
-                        <span className="text-white font-bold text-sm">
-                          {storyItem.name ? storyItem.name.charAt(0).toUpperCase() : '?'}
-                        </span>
-                      </div>
-                      <div className="flex-1">
-                        <h4 className="font-semibold text-gray-800 dark:text-white">{storyItem.name || "Anonim"}</h4>
-                        <div className="flex items-center gap-2 text-xs text-gray-400">
-                          <Calendar className="w-3 h-3" />
-                          <span>{storyItem.date}</span>
-                          <Clock className="w-3 h-3 ml-1" />
-                          <span>{storyItem.time}</span>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="relative pl-4 border-l-2 border-orange-300 dark:border-orange-700">
-                      <Quote className="absolute -left-2 -top-1 w-4 h-4 text-orange-400" />
-                      <p className="text-gray-700 dark:text-gray-300 leading-relaxed pt-3">
-                        {storyItem.content}
-                      </p>
-                    </div>
-                    
-                    <div className="mt-3 flex items-center gap-2 text-xs text-gray-400">
-                      <span className="inline-flex items-center gap-1">
-                        <Heart className="w-3 h-3" />
-                        Qiziqarli voqea
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
         </div>
 
         {/* Direktor Sitati - Placeholder */}
