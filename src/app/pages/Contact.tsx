@@ -1,227 +1,295 @@
-import { MapPin, Phone, Mail, Clock, Send, MessageCircle, Globe, Code } from "lucide-react";
+import { MapPin, Phone, Mail, Send, MessageCircle, Code, Globe, Sparkles, Clock, CheckCircle } from "lucide-react";
 import { useState } from "react";
 
 export function Contact() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    subject: "",
     message: "",
   });
+  const [isSent, setIsSent] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    alert("✅ Xabaringiz yuborildi! Tez orada siz bilan bog'lanamiz.");
-    setFormData({ name: "", email: "", subject: "", message: "" });
+    // Gmailga xabar yuborish uchun mailto link
+    const mailtoLink = `mailto:ziyodulloerkinov906@gmail.com?subject=Saytdan xabar - ${formData.name}&body=Ism: ${formData.name}%0AEmail: ${formData.email}%0A%0AXabar: ${formData.message}`;
+    window.location.href = mailtoLink;
+    
+    setIsSent(true);
+    setTimeout(() => setIsSent(false), 3000);
+    setFormData({ name: "", email: "", message: "" });
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero Qismi */}
-      <div className="bg-gradient-to-br from-blue-700 to-indigo-800 text-white py-16">
-        <div className="max-w-6xl mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-3">Aloqa</h1>
-          <p className="text-lg text-blue-100 max-w-2xl mx-auto">
-            Biz bilan bog'laning, sizning savollaringizga javob beramiz
-          </p>
+    <>
+      <style>{`
+        @keyframes fadeInUp {
+          from { opacity: 0; transform: translateY(30px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes scaleIn {
+          from { opacity: 0; transform: scale(0.95); }
+          to { opacity: 1; transform: scale(1); }
+        }
+        
+        @keyframes pulse {
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50% { opacity: 0.8; transform: scale(0.98); }
+        }
+        
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-10px); }
+        }
+        
+        .animate-fade-in-up {
+          animation: fadeInUp 0.6s ease-out forwards;
+        }
+        
+        .animate-scale-in {
+          animation: scaleIn 0.5s ease-out forwards;
+        }
+        
+        .animate-pulse {
+          animation: pulse 2s ease-in-out infinite;
+        }
+        
+        .animate-float {
+          animation: float 3s ease-in-out infinite;
+        }
+        
+        .hover-lift {
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .hover-lift:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 20px 25px -12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .glass-effect {
+          background: rgba(255, 255, 255, 0.95);
+          backdrop-filter: blur(10px);
+        }
+        
+        .dark .glass-effect {
+          background: rgba(31, 41, 55, 0.95);
+        }
+      `}</style>
+
+      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 transition-colors duration-300">
+        {/* Hero Qismi */}
+        <div className="bg-gradient-to-br from-blue-700 to-indigo-800 dark:from-blue-900 dark:to-indigo-950 text-white py-20">
+          <div className="max-w-6xl mx-auto px-4 text-center">
+            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-1 mb-4 animate-float">
+              <MessageCircle className="w-4 h-4" />
+              <span className="text-xs font-medium">69-IDUM • Aloqa</span>
+            </div>
+            <h1 className="text-4xl md:text-5xl font-bold mb-4 animate-fade-in-up">Biz bilan bog'lanishing</h1>
+            <p className="text-lg text-blue-100 dark:text-blue-200 max-w-2xl mx-auto">
+              Savollaringiz bo'lsa, biz bilan bog'lanishingiz mumkin
+            </p>
+          </div>
         </div>
-      </div>
 
-      <div className="max-w-6xl mx-auto px-4 py-12">
-        <div className="grid lg:grid-cols-2 gap-8">
-          {/* Contact Information */}
-          <div>
-            <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
-              <h2 className="text-xl font-bold text-gray-800 mb-5">Aloqa ma'lumotlari</h2>
-              <div className="space-y-5">
-                <div className="flex gap-3">
-                  <div className="bg-blue-100 w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <MapPin className="h-5 w-5 text-blue-600" />
+        <div className="max-w-6xl mx-auto px-4 py-12">
+          <div className="grid lg:grid-cols-2 gap-8">
+            {/* Contact Information - Telegram, Map, Email, Phone */}
+            <div className="space-y-6">
+              {/* Telegram Card */}
+              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 hover-lift animate-scale-in">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-12 h-12 bg-[#0088cc]/10 rounded-xl flex items-center justify-center">
+                    <MessageCircle className="h-6 w-6 text-[#0088cc]" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-800 mb-1">Manzil</h3>
-                    <p className="text-sm text-gray-600">
-                      Paxtaobod tumani, Ko'ktonlik MFY
-                    </p>
+                    <h3 className="font-bold text-gray-900 dark:text-white">Telegram</h3>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">Ish vaqti: 24/7</p>
                   </div>
                 </div>
+                <a
+                  href="https://t.me/erkinovziyodullo"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-between bg-[#0088cc]/5 dark:bg-[#0088cc]/10 rounded-xl p-3 hover:bg-[#0088cc]/10 transition"
+                >
+                  <span className="text-[#0088cc] font-medium">@erkinovziyodullo</span>
+                  <MessageCircle className="h-4 w-4 text-[#0088cc]" />
+                </a>
+              </div>
 
-                <div className="flex gap-3">
-                  <div className="bg-green-100 w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Phone className="h-5 w-5 text-green-600" />
+              {/* Map Card */}
+              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 hover-lift animate-scale-in" style={{ animationDelay: '0.1s' }}>
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-xl flex items-center justify-center">
+                    <MapPin className="h-6 w-6 text-green-600 dark:text-green-400" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-800 mb-1">Telefon</h3>
-                    <p className="text-sm text-gray-600">+998 95 057 10 17</p>
+                    <h3 className="font-bold text-gray-900 dark:text-white">Manzil</h3>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">Xarita orqali toping</p>
                   </div>
                 </div>
+                <div className="rounded-xl overflow-hidden h-48">
+                  <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2996.5947624155344!2d69.2401!3d41.3111!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDHCsDE4JzQwLjAiTiA2OcKwMTQnMjQuNCJF!5e0!3m2!1sen!2s!4v1234567890"
+                    width="100%"
+                    height="100%"
+                    style={{ border: 0 }}
+                    allowFullScreen
+                    loading="lazy"
+                    title="Maktab manzili"
+                    className="rounded-xl"
+                  />
+                </div>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mt-3">
+                  Paxtaobod tumani, Ko'ktonlik MFY
+                </p>
+              </div>
 
-                <div className="flex gap-3">
-                  <div className="bg-purple-100 w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Mail className="h-5 w-5 text-purple-600" />
+              {/* Email Card */}
+              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 hover-lift animate-scale-in" style={{ animationDelay: '0.2s' }}>
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-xl flex items-center justify-center">
+                    <Mail className="h-6 w-6 text-red-600 dark:text-red-400" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-800 mb-1">Email</h3>
-                    <p className="text-sm text-gray-600">ziyodulloerkinov906@gmail.com</p>
+                    <h3 className="font-bold text-gray-900 dark:text-white">Email</h3>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">Xabar yuborish</p>
                   </div>
                 </div>
+                <a
+                  href="mailto:ziyodulloerkinov906@gmail.com"
+                  className="flex items-center justify-between bg-red-50 dark:bg-red-900/20 rounded-xl p-3 hover:bg-red-100 dark:hover:bg-red-900/30 transition"
+                >
+                  <span className="text-red-600 dark:text-red-400 font-medium">ziyodulloerkinov906@gmail.com</span>
+                  <Mail className="h-4 w-4 text-red-600 dark:text-red-400" />
+                </a>
+              </div>
 
-                <div className="flex gap-3">
-                  <div className="bg-orange-100 w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Clock className="h-5 w-5 text-orange-600" />
+              {/* Phone Card */}
+              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 hover-lift animate-scale-in" style={{ animationDelay: '0.3s' }}>
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center">
+                    <Phone className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-800 mb-1">Ish vaqti</h3>
-                    <p className="text-sm text-gray-600">
-                      Dushanba - Shanba: 08:00 - 17:00
-                    </p>
+                    <h3 className="font-bold text-gray-900 dark:text-white">Telefon raqam</h3>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">Ish vaqti: 08:00 - 17:00</p>
                   </div>
                 </div>
+                <a
+                  href="tel:+998950571017"
+                  className="flex items-center justify-between bg-blue-50 dark:bg-blue-900/20 rounded-xl p-3 hover:bg-blue-100 dark:hover:bg-blue-900/30 transition"
+                >
+                  <span className="text-blue-600 dark:text-blue-400 font-medium text-lg">+998 95 057 10 17</span>
+                  <Phone className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                </a>
               </div>
             </div>
 
-            {/* Rahbariyat */}
-            <div className="bg-gradient-to-br from-blue-600 to-indigo-700 text-white rounded-2xl p-6">
-              <h2 className="text-xl font-bold mb-4">Rahbariyat</h2>
-              <div className="space-y-4">
-                <div>
-                  <div className="text-blue-200 text-xs">Direktor</div>
-                  <div className="font-semibold">Erkinov Ziyodullo Dilmurodjon o'gli</div>
-                  <div className="text-sm text-blue-200">+998 95 057 10 17</div>
+            {/* Contact Form */}
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 hover-lift animate-scale-in">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+                  <Send className="h-5 w-5 text-white" />
                 </div>
-                <div>
-                  <div className="text-blue-200 text-xs">O'quv ishlari bo'yicha</div>
-                  <div className="font-semibold">Karimova Dilnoza Akramovna</div>
-                  <div className="text-sm text-blue-200">+998 71 123 45 68</div>
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white">Xabar yuborish</h2>
+              </div>
+              
+              {isSent && (
+                <div className="mb-4 p-3 bg-green-100 dark:bg-green-900/30 rounded-xl flex items-center gap-2 animate-scale-in">
+                  <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400" />
+                  <p className="text-sm text-green-700 dark:text-green-300">Xabar muvaffaqiyatli yuborildi!</p>
                 </div>
+              )}
+              
+              <form onSubmit={handleSubmit} className="space-y-5">
                 <div>
-                  <div className="text-blue-200 text-xs">Tarbiya ishlari bo'yicha</div>
-                  <div className="font-semibold">Sobirova Nigora Shavkatovna</div>
-                  <div className="text-sm text-blue-200">+998 71 123 45 69</div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Ismingiz *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white transition"
+                    placeholder="Ismingizni kiriting"
+                  />
                 </div>
-              </div>
-            </div>
-          </div>
 
-          {/* Contact Form */}
-          <div className="bg-white rounded-2xl shadow-lg p-6">
-            <h2 className="text-xl font-bold text-gray-800 mb-5">Bizga xabar yuboring</h2>
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Ism familiya
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Ismingizni kiriting"
-                />
-              </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Email *
+                  </label>
+                  <input
+                    type="email"
+                    required
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white transition"
+                    placeholder="email@example.com"
+                  />
+                </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  required
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="email@example.com"
-                />
-              </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Xabar *
+                  </label>
+                  <textarea
+                    required
+                    value={formData.message}
+                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                    rows={5}
+                    className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white resize-none transition"
+                    placeholder="Xabaringizni yozing..."
+                  />
+                </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Mavzu
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={formData.subject}
-                  onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Xabar mavzusi"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Xabar
-                </label>
-                <textarea
-                  required
-                  value={formData.message}
-                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                  rows={5}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-                  placeholder="Xabaringizni yozing..."
-                />
-              </div>
-
-              <button
-                type="submit"
-                className="w-full bg-blue-600 text-white py-2.5 rounded-lg hover:bg-blue-700 transition flex items-center justify-center gap-2"
-              >
-                <Send className="h-4 w-4" />
-                Xabar yuborish
-              </button>
-            </form>
-          </div>
-        </div>
-
-        {/* Map */}
-        <div className="mt-10">
-          <h2 className="text-xl font-bold text-gray-800 mb-4">Maktabni xaritada toping</h2>
-          <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2996.5947624155344!2d69.2401!3d41.3111!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDHCsDE4JzQwLjAiTiA2OcKwMTQnMjQuNCJF!5e0!3m2!1sen!2s!4v1234567890"
-              width="100%"
-              height="350"
-              style={{ border: 0 }}
-              allowFullScreen
-              loading="lazy"
-              title="Maktab manzili"
-              className="rounded-xl"
-            />
-          </div>
-        </div>
-
-        {/* Developer Info - Erkinov Ziyodullo */}
-        <div className="mt-10 pt-6 border-t border-gray-200 text-center">
-          <div className="bg-white rounded-2xl shadow-lg p-6">
-            <div className="flex flex-col items-center">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center mb-3">
-                <Code className="h-6 w-6 text-white" />
-              </div>
-              <h3 className="text-lg font-bold text-gray-800 mb-1">
-                Erkinov Ziyodullo
-              </h3>
-              <p className="text-sm text-gray-500 mb-3">
-                Web dasturchi | Full Stack Developer
+                <button
+                  type="submit"
+                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-xl hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2 font-medium"
+                >
+                  <Send className="h-4 w-4" />
+                  Xabar yuborish
+                </button>
+              </form>
+              
+              <p className="text-xs text-center text-gray-500 dark:text-gray-400 mt-4">
+                Xabaringiz ziyodulloerkinov906@gmail.com ga yuboriladi
               </p>
-              <a
-                href="https://t.me/erkinovziyodullo"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-[#0088cc] text-white px-5 py-2 rounded-full hover:bg-[#006699] transition text-sm font-medium"
-              >
-                <MessageCircle className="h-4 w-4" />
-                Telegram: @erkinovziyodullo
-              </a>
-              <div className="flex gap-3 mt-3 text-xs text-gray-400">
-                <span>© 2025 69-IDUM</span>
-                <span>•</span>
-                <span>Barcha huquqlar himoyalangan</span>
+            </div>
+          </div>
+
+          {/* Developer Info - Erkinov Ziyodullo */}
+          <div className="mt-10 animate-fade-in-up">
+            <div className="bg-gradient-to-br from-gray-800 to-gray-900 dark:from-gray-800 dark:to-gray-900 rounded-2xl p-6 text-white text-center">
+              <div className="flex flex-col items-center">
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mb-4 animate-pulse">
+                  <Code className="h-8 w-8 text-white" />
+                </div>
+                <h3 className="text-xl font-bold mb-1">Erkinov Ziyodullo</h3>
+                <p className="text-sm text-gray-300 mb-4">Web dasturchi | Full Stack Developer</p>
+                <a
+                  href="https://t.me/erkinovziyodullo"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 bg-[#0088cc] hover:bg-[#006699] px-6 py-2 rounded-full transition-all duration-300 text-sm font-medium"
+                >
+                  <MessageCircle className="h-4 w-4" />
+                  Telegram: @erkinovziyodullo
+                </a>
+                <div className="flex gap-3 mt-4 text-xs text-gray-400">
+                  <span>© 2025 69-IDUM</span>
+                  <span>•</span>
+                  <span>Barcha huquqlar himoyalangan</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
