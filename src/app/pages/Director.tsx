@@ -1,6 +1,17 @@
-import { Award, BookOpen, Users, Target, Quote, Star, Sparkles, ChevronRight, Heart, Clock, MessageCircle, Code, Camera, Image } from "lucide-react";
+import { Award, BookOpen, Users, Target, Quote, Star, Sparkles, ChevronRight, Heart, Clock, MessageCircle, Code, Camera, Image, Bell, BellRing } from "lucide-react";
+import { useState, useEffect } from "react";
 
 export function Director() {
+  const [showNotification, setShowNotification] = useState(true);
+
+  useEffect(() => {
+    // 5 sekunddan keyin bildirishnoma avtomatik yopiladi
+    const timer = setTimeout(() => {
+      setShowNotification(false);
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <>
       <style>{`
@@ -29,6 +40,16 @@ export function Director() {
           100% { background-position: 1000px 0; }
         }
         
+        @keyframes slideDown {
+          from { opacity: 0; transform: translateY(-100%); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideUp {
+          from { opacity: 1; transform: translateY(0); }
+          to { opacity: 0; transform: translateY(-100%); }
+        }
+        
         .animate-fade-in-up {
           animation: fadeInUp 0.6s ease-out forwards;
         }
@@ -43,6 +64,14 @@ export function Director() {
         
         .animate-float {
           animation: float 3s ease-in-out infinite;
+        }
+        
+        .animate-slide-down {
+          animation: slideDown 0.5s ease-out forwards;
+        }
+        
+        .animate-slide-up {
+          animation: slideUp 0.5s ease-out forwards;
         }
         
         .hover-lift {
@@ -81,6 +110,36 @@ export function Director() {
       `}</style>
 
       <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 transition-colors duration-300">
+        {/* Fixed Notification Banner - "Tez kunda" bildirishnomasi */}
+        {showNotification && (
+          <div className="fixed top-0 left-0 right-0 z-50 animate-slide-down">
+            <div className="bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-700 dark:to-purple-700 text-white shadow-2xl">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+                <div className="flex items-center justify-between flex-wrap gap-3">
+                  <div className="flex items-center gap-3 flex-1 min-w-0">
+                    <div className="flex-shrink-0">
+                      <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center animate-pulse">
+                        <BellRing className="w-4 h-4" />
+                      </div>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium truncate">
+                        <span className="font-bold">Tez kunda!</span> Direktor bo'limi to'liq ma'lumot bilan yangilanadi. Kuzatib turing! ⭐
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setShowNotification(false)}
+                    className="flex-shrink-0 text-white/80 hover:text-white transition-colors"
+                  >
+                    <span className="text-sm">✕</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Hero Section */}
         <div className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 text-white overflow-hidden">
           <div className="absolute inset-0">
@@ -88,7 +147,7 @@ export function Director() {
             <div className="absolute bottom-20 left-10 w-72 h-72 bg-purple-500/20 rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }} />
           </div>
           
-          <div className="relative max-w-6xl mx-auto px-4 py-24 md:py-32 text-center">
+          <div className="relative max-w-6xl mx-auto px-4 pt-20 pb-24 md:pt-28 md:pb-32 text-center">
             <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-1.5 mb-6 border border-white/20 animate-fade-in-up">
               <Sparkles className="w-4 h-4 text-blue-400" />
               <span className="text-sm font-medium">69-IDUM • Rahbariyat</span>
@@ -137,61 +196,61 @@ export function Director() {
               <div className="relative h-[500px] md:h-auto blur-image flex items-center justify-center">
                 <div className="text-center relative z-10">
                   <Camera className="w-16 h-16 text-white/50 mx-auto mb-3" />
-                  <p className="text-white/60">Tez orada rasm</p>
+                  <p className="text-white/60 text-sm sm:text-base">Tez orada rasm</p>
                 </div>
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6">
-                  <div className="flex gap-4">
-                    <div className="bg-white/10 backdrop-blur-sm rounded-xl px-3 py-1.5">
-                      <p className="text-white text-sm">📅 Tez orada</p>
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4 sm:p-6">
+                  <div className="flex flex-wrap gap-2 sm:gap-4">
+                    <div className="bg-white/10 backdrop-blur-sm rounded-xl px-2 py-1 sm:px-3 sm:py-1.5">
+                      <p className="text-white text-xs sm:text-sm">📅 Tez orada</p>
                     </div>
-                    <div className="bg-white/10 backdrop-blur-sm rounded-xl px-3 py-1.5">
-                      <p className="text-white text-sm">⭐ Tez orada</p>
+                    <div className="bg-white/10 backdrop-blur-sm rounded-xl px-2 py-1 sm:px-3 sm:py-1.5">
+                      <p className="text-white text-xs sm:text-sm">⭐ Tez orada</p>
                     </div>
                   </div>
                 </div>
               </div>
 
               {/* Info Placeholder - Blurred Text */}
-              <div className="p-8 md:p-10">
+              <div className="p-6 sm:p-8 md:p-10">
                 <div className="mb-6">
                   <div className="inline-flex items-center gap-2 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 px-3 py-1 rounded-full text-sm mb-4">
                     <Users className="w-4 h-4" />
                     Rahbar
                   </div>
-                  <h2 className="text-3xl md:text-4xl font-bold mb-1">
+                  <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-1">
                     <span className="shimmer-text">Direktor ism familiyasi</span>
                   </h2>
-                  <p className="text-lg shimmer-text">Tez orada</p>
+                  <p className="text-base sm:text-lg shimmer-text">Tez orada</p>
                 </div>
 
-                <div className="space-y-4">
-                  <div className="flex items-start gap-3 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                <div className="space-y-3 sm:space-y-4">
+                  <div className="flex items-start gap-3 p-2 sm:p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                     <div className="p-2 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
                       <Award className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                     </div>
                     <div>
                       <p className="text-xs text-gray-400 uppercase">Lavozimi</p>
-                      <p className="font-medium shimmer-text">Maktab direktori</p>
+                      <p className="font-medium shimmer-text text-sm sm:text-base">Maktab direktori</p>
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-3 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                  <div className="flex items-start gap-3 p-2 sm:p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                     <div className="p-2 bg-purple-50 dark:bg-purple-900/30 rounded-lg">
                       <BookOpen className="w-5 h-5 text-purple-600 dark:text-purple-400" />
                     </div>
                     <div>
                       <p className="text-xs text-gray-400 uppercase">Ma'lumoti</p>
-                      <p className="font-medium shimmer-text">Tez orada qo'shiladi</p>
+                      <p className="font-medium shimmer-text text-sm sm:text-base">Tez orada qo'shiladi</p>
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-3 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                  <div className="flex items-start gap-3 p-2 sm:p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                     <div className="p-2 bg-green-50 dark:bg-green-900/30 rounded-lg">
                       <Target className="w-5 h-5 text-green-600 dark:text-green-400" />
                     </div>
                     <div>
                       <p className="text-xs text-gray-400 uppercase">Mutaxassisligi</p>
-                      <p className="font-medium shimmer-text">Tez orada qo'shiladi</p>
+                      <p className="font-medium shimmer-text text-sm sm:text-base">Tez orada qo'shiladi</p>
                     </div>
                   </div>
                 </div>
@@ -201,19 +260,19 @@ export function Director() {
 
           {/* Awards Section - Coming Soon */}
           <div className="mb-16">
-            <div className="text-center mb-10">
-              <h3 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mb-2">
+            <div className="text-center mb-8 sm:mb-10">
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mb-2">
                 Mukofot va Yutuqlar
               </h3>
               <div className="w-20 h-1 bg-blue-500 mx-auto rounded-full" />
             </div>
             
-            <div className="grid sm:grid-cols-3 gap-5">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
               {[1, 2, 3].map((_, idx) => (
-                <div key={idx} className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-2xl p-6 text-center hover:scale-105 transition-transform">
-                  <div className="text-5xl mb-3">🏆</div>
-                  <h4 className="font-bold shimmer-text mb-1">Tez orada</h4>
-                  <p className="text-sm text-orange-600 dark:text-orange-400 shimmer-text">Ma'lumot qo'shiladi</p>
+                <div key={idx} className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-2xl p-4 sm:p-6 text-center hover:scale-105 transition-transform">
+                  <div className="text-4xl sm:text-5xl mb-2 sm:mb-3">🏆</div>
+                  <h4 className="font-bold shimmer-text text-sm sm:text-base mb-1">Tez orada</h4>
+                  <p className="text-xs sm:text-sm text-orange-600 dark:text-orange-400 shimmer-text">Ma'lumot qo'shiladi</p>
                 </div>
               ))}
             </div>
@@ -222,55 +281,55 @@ export function Director() {
           {/* Director Message - Blurred */}
           <div className="bg-gradient-to-br from-slate-800 to-slate-900 dark:from-slate-900 dark:to-slate-950 rounded-3xl overflow-hidden mb-16">
             <div className="grid md:grid-cols-5 gap-0">
-              <div className="md:col-span-2 bg-slate-700 dark:bg-slate-800 p-8 md:p-10 flex items-center justify-center">
-                <Quote className="w-16 h-16 text-slate-500 dark:text-slate-600" />
+              <div className="md:col-span-2 bg-slate-700 dark:bg-slate-800 p-6 md:p-8 lg:p-10 flex items-center justify-center">
+                <Quote className="w-12 h-12 md:w-16 md:h-16 text-slate-500 dark:text-slate-600" />
               </div>
-              <div className="md:col-span-3 p-8 md:p-10 text-white">
-                <h3 className="text-2xl md:text-3xl font-bold mb-4">Direktor so'zi</h3>
-                <div className="space-y-4 text-slate-200 leading-relaxed">
-                  <p className="shimmer-text">
+              <div className="md:col-span-3 p-6 md:p-8 lg:p-10 text-white">
+                <h3 className="text-xl md:text-2xl lg:text-3xl font-bold mb-3 md:mb-4">Direktor so'zi</h3>
+                <div className="space-y-3 md:space-y-4 text-slate-200 leading-relaxed">
+                  <p className="shimmer-text text-sm md:text-base">
                     Direktorning xabari tez orada qo'shiladi. Kuzatib turing!
                   </p>
-                  <p className="shimmer-text">
+                  <p className="shimmer-text text-sm md:text-base">
                     Maktabimiz haqida barcha ma'lumotlar va direktorimizning faoliyati haqida to'liq ma'lumot tez kunda e'lon qilinadi.
                   </p>
                 </div>
-                <div className="mt-6 pt-4 border-t border-slate-700">
-                  <p className="text-sm text-slate-400">Hurmat bilan,</p>
-                  <p className="text-lg font-semibold shimmer-text">Direktor ism familiyasi</p>
-                  <p className="text-sm text-slate-400">Maktab direktori</p>
+                <div className="mt-4 md:mt-6 pt-3 md:pt-4 border-t border-slate-700">
+                  <p className="text-xs md:text-sm text-slate-400">Hurmat bilan,</p>
+                  <p className="text-base md:text-lg font-semibold shimmer-text">Direktor ism familiyasi</p>
+                  <p className="text-xs md:text-sm text-slate-400">Maktab direktori</p>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Mission & Vision - Coming Soon */}
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="group bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-2xl p-8 hover:shadow-xl transition-all">
-              <div className="w-14 h-14 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
-                <Target className="w-7 h-7 text-blue-600 dark:text-blue-400" />
+          <div className="grid md:grid-cols-2 gap-4 sm:gap-6">
+            <div className="group bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-2xl p-5 sm:p-6 md:p-8 hover:shadow-xl transition-all">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center mb-3 sm:mb-5 group-hover:scale-110 transition-transform">
+                <Target className="w-6 h-6 sm:w-7 sm:h-7 text-blue-600 dark:text-blue-400" />
               </div>
-              <h4 className="text-2xl font-bold text-gray-800 dark:text-white mb-3">Maqsadimiz</h4>
-              <p className="shimmer-text leading-relaxed">
+              <h4 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-white mb-2 sm:mb-3">Maqsadimiz</h4>
+              <p className="shimmer-text leading-relaxed text-sm sm:text-base">
                 Ma'lumot tez orada qo'shiladi. Kuzatib turing!
               </p>
-              <div className="mt-4 flex items-center gap-1 text-blue-600 dark:text-blue-400 text-sm font-medium">
+              <div className="mt-3 sm:mt-4 flex items-center gap-1 text-blue-600 dark:text-blue-400 text-xs sm:text-sm font-medium">
                 <span>Tez orada</span>
-                <ChevronRight className="w-4 h-4" />
+                <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4" />
               </div>
             </div>
 
-            <div className="group bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-2xl p-8 hover:shadow-xl transition-all">
-              <div className="w-14 h-14 bg-green-100 dark:bg-green-900/30 rounded-xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
-                <Heart className="w-7 h-7 text-green-600 dark:text-green-400" />
+            <div className="group bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-2xl p-5 sm:p-6 md:p-8 hover:shadow-xl transition-all">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-green-100 dark:bg-green-900/30 rounded-xl flex items-center justify-center mb-3 sm:mb-5 group-hover:scale-110 transition-transform">
+                <Heart className="w-6 h-6 sm:w-7 sm:h-7 text-green-600 dark:text-green-400" />
               </div>
-              <h4 className="text-2xl font-bold text-gray-800 dark:text-white mb-3">Vazifamiz</h4>
-              <p className="shimmer-text leading-relaxed">
+              <h4 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-white mb-2 sm:mb-3">Vazifamiz</h4>
+              <p className="shimmer-text leading-relaxed text-sm sm:text-base">
                 Ma'lumot tez orada qo'shiladi. Kuzatib turing!
               </p>
-              <div className="mt-4 flex items-center gap-1 text-green-600 dark:text-green-400 text-sm font-medium">
+              <div className="mt-3 sm:mt-4 flex items-center gap-1 text-green-600 dark:text-green-400 text-xs sm:text-sm font-medium">
                 <span>Tez orada</span>
-                <ChevronRight className="w-4 h-4" />
+                <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4" />
               </div>
             </div>
           </div>
