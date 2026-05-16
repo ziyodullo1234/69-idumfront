@@ -14,35 +14,27 @@ import {
   Heart,
   Sparkles,
   Quote,
-  Play,
   ChevronRight,
   Clock,
-  UserCheck,
   Trophy,
   Target,
   Zap,
   GraduationCap,
-  CheckCircle,
-  ExternalLink,
   Mail,
   MessageCircle,
   Youtube,
   Instagram,
   Facebook,
   ChevronLeft,
-  X,
 } from "lucide-react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { AnimatedCounter } from "../components/AnimatedCounter";
 
 export function Home() {
   const [activeTestimonial, setActiveTestimonial] = useState(0);
   const [scrollY, setScrollY] = useState(0);
   const [hoveredCard, setHoveredCard] = useState(null);
-  const [videoPlaying, setVideoPlaying] = useState(false);
-  const videoRef = useRef(null);
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -327,16 +319,6 @@ export function Home() {
                   transition={{ duration: 0.3 }}
                 />
               </Link>
-              
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setVideoPlaying(true)}
-                className="inline-flex items-center gap-3 bg-white/10 backdrop-blur-sm border border-white/30 text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-white/20 transition-all"
-              >
-                <Play className="h-5 w-5 fill-white" />
-                Video namoyish
-              </motion.button>
             </motion.div>
 
             {/* Stats */}
@@ -394,58 +376,6 @@ export function Home() {
         </motion.div>
       </section>
 
-      {/* Video Modal - O'zbekcha video */}
-      <AnimatePresence>
-        {videoPlaying && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-4"
-            onClick={() => setVideoPlaying(false)}
-          >
-            <motion.div
-              initial={{ scale: 0.9, y: 50 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: 50 }}
-              className="relative w-full max-w-5xl"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* Video player */}
-              <div className="relative aspect-video rounded-2xl overflow-hidden bg-black shadow-2xl">
-                <video
-                  ref={videoRef}
-                  className="w-full h-full"
-                  controls
-                  autoPlay
-                  playsInline
-                >
-                  {/* O'zingizning video faylingiz nomini yozing */}
-                  <source src="/maktab-video.mp4" type="video/mp4" />
-                  <source src="/maktab-video.webm" type="video/webm" />
-                  Sizning brauzeringiz videoni qo'llab-quvvatlamaydi.
-                </video>
-              </div>
-
-              {/* Video info */}
-              <div className="absolute -bottom-16 left-0 right-0 text-white/80 text-center">
-                <p className="text-lg">69-IDUM maktabi - Bilim maskani</p>
-              </div>
-
-              {/* Close button */}
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                onClick={() => setVideoPlaying(false)}
-                className="absolute -top-12 right-0 text-white/60 hover:text-white transition-colors"
-              >
-                <X className="h-8 w-8" />
-              </motion.button>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       {/* Features Section */}
       <section className="py-24 bg-gray-50 dark:bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -499,140 +429,6 @@ export function Home() {
               </motion.div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* Director's Message */}
-      <section className="py-24 bg-white dark:bg-gray-950">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            className="relative bg-gradient-to-br from-gray-50 to-white dark:from-gray-800 dark:to-gray-900 rounded-3xl shadow-2xl overflow-hidden"
-          >
-            {/* Decorative Elements */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/5 rounded-full blur-3xl" />
-            <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-500/5 rounded-full blur-3xl" />
-            
-            <div className="relative grid lg:grid-cols-2 gap-8">
-              {/* Image */}
-              <motion.div
-                initial={{ opacity: 0, x: -50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                className="relative h-[500px] lg:h-full"
-              >
-                <img 
-                  src="/websayt.jpg" 
-                  alt="Direktor Erkinov Ziyodullo" 
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-                
-                {/* Quote Badge */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.3 }}
-                  className="absolute bottom-6 left-6 bg-white/20 backdrop-blur-md rounded-full px-4 py-2 text-white border border-white/30"
-                >
-                  <Quote className="h-4 w-4 inline mr-2" />
-                  <span className="text-sm">30+ yillik tajriba</span>
-                </motion.div>
-              </motion.div>
-
-              {/* Content */}
-              <motion.div
-                initial={{ opacity: 0, x: 50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                className="p-8 lg:p-12 flex flex-col justify-center"
-              >
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.2 }}
-                  className="inline-flex items-center gap-2 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-4 py-2 rounded-full mb-6 w-fit"
-                >
-                  <UserCheck className="h-4 w-4" />
-                  <span className="text-sm font-medium">Maktab direktori</span>
-                </motion.div>
-
-                <motion.h2
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.3 }}
-                  className="text-3xl lg:text-4xl font-bold mb-2"
-                >
-                  Erkinov Ziyodullo
-                </motion.h2>
-                
-                <motion.p
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.4 }}
-                  className="text-lg text-gray-600 dark:text-gray-400 mb-6"
-                >
-                  Pedagogika fanlari nomzodi
-                </motion.p>
-
-                {/* Quote */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.5 }}
-                  className="relative mb-8"
-                >
-                  <Quote className="absolute -top-4 -left-2 h-10 w-10 text-blue-200 dark:text-gray-700" />
-                  <p className="relative text-lg text-gray-700 dark:text-gray-300 leading-relaxed pl-8">
-                    "Har bir bola - bu alohida olam. Bizning vazifamiz - shu olamni kashf etishga yordam berish 
-                    va ularning eng yaxshi versiyasini yaratish."
-                  </p>
-                </motion.div>
-
-                {/* Stats */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.6 }}
-                  className="grid grid-cols-3 gap-4 mb-8"
-                >
-                  {[
-                    { value: "39", label: "Ish staji" },
-                    { value: "1500+", label: "Bitiruvchilar" },
-                    { value: "50+", label: "Mukofotlar" },
-                  ].map((stat, index) => (
-                    <div key={index}>
-                      <div className="text-2xl font-bold text-blue-600">{stat.value}</div>
-                      <div className="text-sm text-gray-600 dark:text-gray-400">{stat.label}</div>
-                    </div>
-                  ))}
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.7 }}
-                >
-                  <Link
-                    to="/director"
-                    className="group inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 font-semibold hover:gap-3 transition-all"
-                  >
-                    Direktor bilan tanishing
-                    <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                  </Link>
-                </motion.div>
-              </motion.div>
-            </div>
-          </motion.div>
         </div>
       </section>
 
