@@ -119,7 +119,7 @@ export function Contact() {
                 </a>
               </div>
 
-              {/* Map Card */}
+              {/* Map Card - YANGI IFRAME QO'YILDI */}
               <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 hover-lift animate-scale-in" style={{ animationDelay: '0.1s' }}>
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-xl flex items-center justify-center">
@@ -132,18 +132,19 @@ export function Contact() {
                 </div>
                 <div className="rounded-xl overflow-hidden h-48">
                   <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2996.5947624155344!2d69.2401!3d41.3111!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDHCsDE4JzQwLjAiTiA2OcKwMTQnMjQuNCJF!5e0!3m2!1sen!2s!4v1234567890"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1102.2762921625788!2d72.49460650720002!3d40.95604670297282!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38bcc3004cda305b%3A0xde8ca94fb13460cd!2s69%20IDUM!5e1!3m2!1sru!2s!4v1779709357862!5m2!1sru!2s"
                     width="100%"
                     height="100%"
                     style={{ border: 0 }}
                     allowFullScreen
                     loading="lazy"
-                    title="Maktab manzili"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    title="69-IDUM maktab manzili"
                     className="rounded-xl"
                   />
                 </div>
                 <p className="text-sm text-gray-600 dark:text-gray-400 mt-3">
-                  Paxtaobod tumani, Ko'ktonlik MFY
+                  69-IDUM, Paxtaobod tumani
                 </p>
               </div>
 
