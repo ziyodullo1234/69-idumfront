@@ -33,14 +33,7 @@ import { AnimatedCounter } from "../components/AnimatedCounter";
 
 export function Home() {
   const [activeTestimonial, setActiveTestimonial] = useState(0);
-  const [scrollY, setScrollY] = useState(0);
   const [hoveredCard, setHoveredCard] = useState(null);
-
-  useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   const quickLinks = [
     {
@@ -210,22 +203,17 @@ export function Home() {
 
   return (
     <div className="overflow-hidden bg-white dark:bg-gray-950">
-      {/* Hero Section with Parallax */}
+      {/* Hero Section - NO PARALLAX, just static background */}
       <section className="relative h-screen min-h-[700px] overflow-hidden">
-        {/* Background Image with Parallax */}
-        <motion.div 
-          className="absolute inset-0"
-          style={{
-            y: scrollY * 0.5,
-          }}
-        >
+        {/* Static Background Image - no movement */}
+        <div className="absolute inset-0">
           <img 
             src="/maktab.jpg" 
             alt="Maktab binosi" 
-            className="w-full h-full object-cover scale-110"
+            className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-gray-900/95 via-gray-900/80 to-transparent" />
-        </motion.div>
+        </div>
 
         {/* Animated Shapes */}
         <div className="absolute inset-0 overflow-hidden">
@@ -409,7 +397,6 @@ export function Home() {
                 onHoverEnd={() => setHoveredCard(null)}
                 className="group relative bg-white dark:bg-gray-800 rounded-2xl p-8 hover:shadow-xl transition-all overflow-hidden"
               >
-                {/* Animated Background */}
                 <motion.div
                   animate={{
                     scale: hoveredCard === index ? 1.5 : 1,
@@ -463,7 +450,6 @@ export function Home() {
                   to={link.href}
                   className="group relative block bg-white dark:bg-gray-800 rounded-2xl p-6 hover:shadow-xl transition-all overflow-hidden"
                 >
-                  {/* Hover Gradient */}
                   <motion.div
                     className={`absolute inset-0 bg-gradient-to-br ${link.gradient}`}
                     initial={{ opacity: 0 }}
@@ -471,7 +457,6 @@ export function Home() {
                     transition={{ duration: 0.3 }}
                   />
                   
-                  {/* Content */}
                   <div className="relative z-10">
                     <motion.div
                       whileHover={{ scale: 1.1, rotate: 5 }}
@@ -618,7 +603,6 @@ export function Home() {
                 className="group cursor-pointer"
               >
                 <div className="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all">
-                  {/* Image */}
                   <div className="relative h-48 overflow-hidden">
                     <motion.img
                       whileHover={{ scale: 1.1 }}
@@ -636,7 +620,6 @@ export function Home() {
                     </motion.div>
                   </div>
 
-                  {/* Content */}
                   <div className="p-6">
                     <div className="flex items-center gap-2 text-sm text-gray-500 mb-3">
                       <Calendar className="h-4 w-4" />
@@ -684,7 +667,6 @@ export function Home() {
           </motion.div>
 
           <div className="relative">
-            {/* Navigation Buttons */}
             <motion.button
               whileHover={{ scale: 1.1, x: -5 }}
               whileTap={{ scale: 0.9 }}
@@ -703,7 +685,6 @@ export function Home() {
               <ChevronRight className="h-5 w-5" />
             </motion.button>
 
-            {/* Testimonials Slider */}
             <div className="overflow-hidden">
               <motion.div
                 animate={{ x: `-${activeTestimonial * 100}%` }}
@@ -747,7 +728,6 @@ export function Home() {
                           <h4 className="font-semibold text-lg">{testimonial.name}</h4>
                           <p className="text-gray-600 dark:text-gray-400">{testimonial.role}</p>
                           
-                          {/* Rating */}
                           <div className="flex gap-1 mt-1">
                             {[...Array(testimonial.rating)].map((_, i) => (
                               <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
@@ -761,7 +741,6 @@ export function Home() {
               </motion.div>
             </div>
 
-            {/* Navigation Dots */}
             <div className="flex justify-center gap-2 mt-8">
               {testimonials.map((_, index) => (
                 <motion.button
@@ -783,26 +762,15 @@ export function Home() {
 
       {/* CTA Section */}
       <section className="relative py-32 overflow-hidden">
-        <motion.div
-          animate={{
-            scale: [1, 1.1, 1],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "linear",
-          }}
-          className="absolute inset-0"
-        >
+        <div className="absolute inset-0">
           <img 
             src="/maktab.jpg" 
             alt="CTA Background" 
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-gray-900/95 to-gray-900/90" />
-        </motion.div>
+        </div>
 
-        {/* Animated Background Elements */}
         <div className="absolute inset-0 overflow-hidden">
           <motion.div
             animate={{
@@ -894,7 +862,6 @@ export function Home() {
               </motion.div>
             </motion.div>
 
-            {/* Contact Info */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
