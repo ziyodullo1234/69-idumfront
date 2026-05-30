@@ -34,6 +34,21 @@ import { AnimatedCounter } from "../components/AnimatedCounter";
 export function Home() {
   const [activeTestimonial, setActiveTestimonial] = useState(0);
   const [hoveredCard, setHoveredCard] = useState(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  // Scroll event handler - pasga tushgan sari tepada chiziq to'lib boradi
+  useEffect(() => {
+    const handleScroll = () => {
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+      const scrollTop = window.scrollY;
+      const progress = (scrollTop / (documentHeight - windowHeight)) * 100;
+      setScrollProgress(progress);
+    };
+    
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const quickLinks = [
     {
@@ -203,6 +218,17 @@ export function Home() {
 
   return (
     <div className="overflow-hidden bg-white dark:bg-gray-950">
+      {/* Progress Bar - Pasga tushgan sari chapdan o'nga to'lib boradi */}
+      <div className="fixed top-0 left-0 right-0 z-50 h-1 bg-gray-200 dark:bg-gray-700">
+        <motion.div
+          className="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"
+          style={{ width: `${scrollProgress}%` }}
+          initial={{ width: "0%" }}
+          animate={{ width: `${scrollProgress}%` }}
+          transition={{ duration: 0.1, ease: "linear" }}
+        />
+      </div>
+
       {/* Hero Section - NO PARALLAX, just static background */}
       <section className="relative h-screen min-h-[700px] overflow-hidden">
         {/* Static Background Image - no movement */}
@@ -889,11 +915,11 @@ export function Home() {
               </motion.a>
               <motion.a
                 whileHover={{ scale: 1.05, color: "#fff" }}
-                href="mailto:ziyodulloerkinov906"
+                href="mailto:ziyodulloerkinov906@gmail.com"
                 className="flex items-center gap-2"
               >
                 <Mail className="h-4 w-4" />
-                <span>ziyodulloerkinov906</span>
+                <span>ziyodulloerkinov906@gmail.com</span>
               </motion.a>
             </motion.div>
           </motion.div>

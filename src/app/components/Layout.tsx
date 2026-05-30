@@ -149,7 +149,7 @@ export function Layout() {
               <h3 className="font-bold mb-4">Aloqa</h3>
               <ul className="space-y-2 text-sm text-gray-300">
                 <li>Tel: +998 95 057 10 17</li>
-                <li>Email: ziyodulloerkinov906</li>
+                <li>Email: ziyodulloerkinov906@gmail.com</li>
                 <li>Andijon viloyati, Paxtaobod tumani</li>
               </ul>
             </div>
