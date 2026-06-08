@@ -8,9 +8,16 @@ import {
   BookOpen,
   Camera,
   Clock,
-  ArrowRight
+  ArrowRight,
+  TrendingUp,
+  Heart,
+  Share2,
+  Tag,
+  User,
+  ChevronRight
 } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router";
 
 export function Blog() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -18,36 +25,70 @@ export function Blog() {
 
   const categories = ["Hammasi", "Yangiliklar", "Tadbirlar", "E'lonlar", "Yutuqlar"];
 
-  // Test posts (faqat ko'rinish uchun)
   const allPosts = [
     {
       id: 1,
-      title: "Maktab hayoti",
-      excerpt: "Maktabimizdagi so'nggi yangiliklar va tadbirlar haqida...",
-      category: "Yangiliklar",
-      date: "2025-03-15",
+      title: "Xalqaro konferensiyada ishtirok",
+      excerpt: "O'quvchilarimiz Buxoroda bo'lib o'tgan yosh olimlar konferensiyasida 5 ta loyiha bilan ishtirok etishdi.",
+      category: "Tadbirlar",
+      date: "15.03.2026",
       views: 234,
-      comments: 12
+      comments: 12,
+      readTime: "3 min"
     },
     {
       id: 2,
-      title: "O'quv yili yakunlari",
-      excerpt: "O'quv yili davomida erishilgan yutuqlar...",
-      category: "Yutuqlar",
-      date: "2025-03-10",
-      views: 189,
-      comments: 8
+      title: "Yangi sport zali ochildi",
+      excerpt: "Zamonaviy jihozlar bilan ta'minlangan 500 kv.m sport zali o'z eshiklarini ochdi.",
+      category: "Yangiliklar",
+      date: "10.03.2026",
+      views: 456,
+      comments: 23,
+      readTime: "2 min"
     },
     {
       id: 3,
-      title: "Sport musobaqalari",
-      excerpt: "Maktab jamoalarining muvaffaqiyatlari...",
+      title: "Bitiruvchilar uchrashuvi",
+      excerpt: "30 yillik an'anaga aylangan bitiruvchilar uchrashuvida 200 dan ortiq mehmon qatnashdi.",
       category: "Tadbirlar",
-      date: "2025-03-05",
-      views: 456,
-      comments: 23
+      date: "05.03.2026",
+      views: 189,
+      comments: 8,
+      readTime: "4 min"
+    },
+    {
+      id: 4,
+      title: "Matematika olimpiadasi g'oliblari",
+      excerpt: "Xalqaro matematika olimpiadasida 3 ta oltin, 2 ta kumush medal qo'lga kiritildi.",
+      category: "Yutuqlar",
+      date: "28.02.2026",
+      views: 567,
+      comments: 34,
+      readTime: "5 min"
+    },
+    {
+      id: 5,
+      title: "Kutubxonaga yangi kitoblar",
+      excerpt: "Maktab kutubxonamiz 500 dan ortiq yangi badiiy va ilmiy kitoblar bilan boyidi.",
+      category: "E'lonlar",
+      date: "20.02.2026",
+      views: 123,
+      comments: 5,
+      readTime: "2 min"
+    },
+    {
+      id: 6,
+      title: "O'qituvchilar kuni",
+      excerpt: "Hurmatli ustozlarimizga bag'ishlangan tantanali tadbir bo'lib o'tdi.",
+      category: "Yangiliklar",
+      date: "05.10.2025",
+      views: 345,
+      comments: 18,
+      readTime: "3 min"
     }
   ];
+
+  const popularPosts = [...allPosts].sort((a, b) => b.views - a.views).slice(0, 3);
 
   const filteredPosts = allPosts.filter((post) => {
     const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -57,252 +98,265 @@ export function Blog() {
   });
 
   return (
-    <>
-      <style>{`
-        @keyframes fadeInUp {
-          from { opacity: 0; transform: translateY(30px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-indigo-50 dark:from-gray-950 dark:via-gray-900 dark:to-slate-900">
+      
+      {/* Hero Section */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-indigo-900 to-purple-900 text-white">
+        <div className="absolute inset-0">
+          <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-500/30 rounded-full blur-3xl" />
+          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-500/30 rounded-full blur-3xl" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-pink-500/20 rounded-full blur-3xl" />
+        </div>
         
-        @keyframes scaleIn {
-          from { opacity: 0; transform: scale(0.95); }
-          to { opacity: 1; transform: scale(1); }
-        }
-        
-        @keyframes pulse {
-          0%, 100% { opacity: 1; transform: scale(1); }
-          50% { opacity: 0.8; transform: scale(0.98); }
-        }
-        
-        @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-10px); }
-        }
-        
-        .animate-fade-in-up {
-          animation: fadeInUp 0.6s ease-out forwards;
-        }
-        
-        .animate-scale-in {
-          animation: scaleIn 0.5s ease-out forwards;
-        }
-        
-        .animate-pulse {
-          animation: pulse 2s ease-in-out infinite;
-        }
-        
-        .animate-float {
-          animation: float 3s ease-in-out infinite;
-        }
-        
-        .hover-lift {
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .hover-lift:hover {
-          transform: translateY(-4px);
-          box-shadow: 0 20px 25px -12px rgba(0, 0, 0, 0.15);
-        }
-      `}</style>
-
-      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 transition-colors duration-300">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          {/* HEADER */}
-          <div className="text-center mb-12 animate-fade-in-up">
-            <div className="inline-flex items-center gap-2 bg-blue-50 dark:bg-blue-900/30 px-4 py-2 rounded-full mb-4">
-              <Sparkles className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-              <span className="text-sm font-medium text-blue-600 dark:text-blue-400">69-IDUM • Blog</span>
-            </div>
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-              Maktab <span className="text-blue-600 dark:text-blue-400">blogi</span>
-            </h1>
-            <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-              Eng so'nggi yangiliklar, tadbirlar va e'lonlar
-            </p>
+        <div className="relative max-w-7xl mx-auto px-4 pt-20 pb-24 md:pt-28 md:pb-32 text-center">
+          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-5 py-2 mb-6 border border-white/20">
+            <Sparkles className="w-4 h-4 text-yellow-400" />
+            <span className="text-sm font-medium">69-IDUM • Rasmiy blog</span>
           </div>
-
-          {/* Coming Soon Banner - Gallery Link */}
-          <div className="mb-12 animate-fade-in-up">
-            <div className="bg-gradient-to-r from-blue-500 to-purple-600 dark:from-blue-600 dark:to-purple-700 rounded-2xl p-6 text-white shadow-xl">
-              <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-                <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center animate-pulse">
-                    <Camera className="w-8 h-8" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold">📸 Maktab galereyasi</h3>
-                    <p className="text-white/80 text-sm">Maktab hayotidan lavhalar va esdalik suratlar</p>
-                  </div>
-                </div>
-                <a 
-                  href="/gallery" 
-                  className="flex items-center gap-2 bg-white/20 hover:bg-white/30 rounded-full px-5 py-2 transition-all duration-300"
-                >
-                  <span>Ko'rish</span>
-                  <ArrowRight className="w-4 h-4" />
-                </a>
-              </div>
-            </div>
-          </div>
-
-          {/* Coming Soon Card */}
-          <div className="max-w-2xl mx-auto mb-12 animate-fade-in-up">
-            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-2xl p-8 md:p-12 text-center border-2 border-dashed border-blue-300 dark:border-blue-700 hover-lift">
-              <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900/40 dark:to-purple-900/40 rounded-full mb-6 animate-pulse">
-                <BookOpen className="w-12 h-12 text-blue-600 dark:text-blue-400" />
-              </div>
-              
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-3">
-                Tez orada <span className="text-blue-600 dark:text-blue-400">rasmlar qo'shiladi</span>
-              </h2>
-              
-              <p className="text-gray-600 dark:text-gray-400 text-lg mb-4">
-                Maktab galereyasini ko'rishingiz mumkin! 📸
-              </p>
-              
-              <p className="text-gray-500 dark:text-gray-500 mb-6">
-                Yangi maqolalar, tadbirlar va maktab hayotidan eng so'nggi rasmlar<br />
-                tez kunda sizlar bilan!
-              </p>
-              
-              <div className="mt-6 pt-4 border-t border-blue-200 dark:border-blue-800/50">
-                <div className="flex items-center justify-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-                  <Clock className="w-4 h-4" />
-                  <span>Kuzatib turing! Yangi kontentlar tez kunda</span>
-                </div>
-                <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">
-                  ⭐ Maktab hayoti bilan birga bo'ling! ⭐
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Search */}
-          <div className="mb-8 animate-fade-in-up">
-            <div className="relative max-w-md mx-auto">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Maqola qidirish..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white"
-              />
-            </div>
-          </div>
-
-          {/* Categories */}
-          <div className="flex flex-wrap justify-center gap-3 mb-8 animate-fade-in-up">
-            {categories.map((category) => (
-              <button
-                key={category}
-                onClick={() => setSelectedCategory(category)}
-                className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${
-                  selectedCategory === category
-                    ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg"
-                    : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700"
-                }`}
-              >
-                {category}
-              </button>
-            ))}
-          </div>
-
-          {/* Posts Grid */}
-          {filteredPosts.length === 0 ? (
-            <div className="text-center py-20 animate-fade-in-up">
-              <div className="inline-flex items-center justify-center w-20 h-20 bg-gray-100 dark:bg-gray-800 rounded-full mb-4">
-                <BookOpen className="w-10 h-10 text-gray-400" />
-              </div>
-              <p className="text-gray-500 dark:text-gray-400">Hech qanday maqola topilmadi</p>
-              {searchTerm && (
-                <button
-                  onClick={() => setSearchTerm("")}
-                  className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-                >
-                  Qidiruvni tozalash
-                </button>
-              )}
-            </div>
-          ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredPosts.map((post, index) => (
-                <div
-                  key={post.id}
-                  className="group bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 animate-fade-in-up"
-                  style={{ animationDelay: `${index * 0.1}s` }}
-                >
-                  {/* Image Placeholder */}
-                  <div className="relative h-48 bg-gradient-to-br from-blue-400 to-purple-500 dark:from-blue-600 dark:to-purple-700 flex items-center justify-center">
-                    <div className="text-center">
-                      <Camera className="w-12 h-12 text-white/50 mx-auto mb-2" />
-                      <p className="text-white/70 text-sm">Tez orada rasm</p>
-                    </div>
-                    <div className="absolute top-3 left-3">
-                      <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-xs">
-                        {post.category}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Content */}
-                  <div className="p-5">
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition">
-                      {post.title}
-                    </h3>
-                    <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-3">
-                      {post.excerpt}
-                    </p>
-
-                    {/* Meta Info */}
-                    <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-500">
-                      <div className="flex items-center gap-2">
-                        <Calendar className="w-3 h-3" />
-                        <span>{post.date}</span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <div className="flex items-center gap-1">
-                          <Eye className="w-3 h-3" />
-                          <span>{post.views}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <MessageCircle className="w-3 h-3" />
-                          <span>{post.comments}</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Preview Button */}
-                    <button className="mt-4 w-full py-2 text-center text-sm text-blue-600 dark:text-blue-400 border-t border-gray-100 dark:border-gray-700 pt-3 hover:text-blue-700 transition">
-                      Tez orada...
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* Gallery Link Card */}
-          <div className="mt-12 bg-gradient-to-br from-indigo-500 to-purple-600 dark:from-indigo-600 dark:to-purple-700 rounded-2xl p-8 text-white text-center animate-fade-in-up">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-white/20 rounded-full mb-4 animate-float">
-              <Camera className="w-8 h-8" />
-            </div>
-            <h3 className="text-2xl font-bold mb-2">Maktab galereyasi</h3>
-            <p className="text-indigo-100 mb-4 max-w-md mx-auto">
-              Maktab hayotidan eng yaxshi lavhalar va esdalik suratlar
-            </p>
-            <a 
-              href="/gallery" 
-              className="inline-flex items-center gap-2 bg-white text-indigo-600 hover:bg-indigo-50 rounded-full px-6 py-2 font-medium transition-all duration-300"
-            >
-              <span>Galereyani ko'rish</span>
-              <ArrowRight className="w-4 h-4" />
-            </a>
-          </div>
+          
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-4 bg-gradient-to-r from-white via-blue-200 to-purple-200 bg-clip-text text-transparent">
+            Maktab blogi
+          </h1>
+          
+          <div className="w-24 h-1 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full mx-auto mb-6" />
+          
+          <p className="text-xl text-blue-100 max-w-2xl mx-auto">
+            Eng so'nggi yangiliklar, tadbirlar va yutuqlar
+          </p>
         </div>
       </div>
-    </>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        
+        {/* Stats Bar */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-4 text-center shadow-md">
+            <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">45+</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">Maqolalar</div>
+          </div>
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-4 text-center shadow-md">
+            <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">12K+</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">O'qishlar</div>
+          </div>
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-4 text-center shadow-md">
+            <div className="text-2xl font-bold text-green-600 dark:text-green-400">158</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">Izohlar</div>
+          </div>
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-4 text-center shadow-md">
+            <div className="text-2xl font-bold text-orange-600 dark:text-orange-400">24</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">Yutuqlar</div>
+          </div>
+        </div>
+
+        {/* Search and Filter Section */}
+        <div className="flex flex-col md:flex-row gap-4 mb-10">
+          <div className="flex-1 relative">
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Maqola qidirish..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-12 pr-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white shadow-sm"
+            />
+          </div>
+        </div>
+
+        {/* Categories */}
+        <div className="flex flex-wrap gap-3 mb-10">
+          {categories.map((category) => (
+            <button
+              key={category}
+              onClick={() => setSelectedCategory(category)}
+              className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                selectedCategory === category
+                  ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md"
+                  : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700"
+              }`}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
+
+        {/* Main Content Grid */}
+        <div className="grid lg:grid-cols-3 gap-8">
+          
+          {/* Posts Grid */}
+          <div className="lg:col-span-2">
+            {filteredPosts.length === 0 ? (
+              <div className="bg-white dark:bg-gray-800 rounded-2xl p-12 text-center shadow-md">
+                <BookOpen className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                <p className="text-gray-500 dark:text-gray-400 text-lg">Hech qanday maqola topilmadi</p>
+                {searchTerm && (
+                  <button
+                    onClick={() => setSearchTerm("")}
+                    className="mt-4 px-5 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:shadow-lg transition"
+                  >
+                    Qidiruvni tozalash
+                  </button>
+                )}
+              </div>
+            ) : (
+              <div className="space-y-6">
+                {filteredPosts.map((post, index) => (
+                  <div
+                    key={post.id}
+                    className="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group"
+                  >
+                    <div className="md:flex">
+                      {/* Image */}
+                      <div className="md:w-48 h-48 bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center relative">
+                        <Camera className="w-12 h-12 text-white/50" />
+                        <div className="absolute top-3 left-3">
+                          <span className="bg-white/20 backdrop-blur-sm text-white px-2 py-0.5 rounded-full text-xs">
+                            {post.category}
+                          </span>
+                        </div>
+                      </div>
+                      
+                      {/* Content */}
+                      <div className="flex-1 p-5">
+                        <div className="flex items-center gap-3 text-xs text-gray-500 mb-2">
+                          <div className="flex items-center gap-1">
+                            <Calendar className="w-3 h-3" />
+                            <span>{post.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Clock className="w-3 h-3" />
+                            <span>{post.readTime}</span>
+                          </div>
+                        </div>
+                        
+                        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition">
+                          {post.title}
+                        </h3>
+                        
+                        <p className="text-gray-600 dark:text-gray-400 text-sm mb-3 line-clamp-2">
+                          {post.excerpt}
+                        </p>
+                        
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3 text-xs text-gray-500">
+                            <div className="flex items-center gap-1">
+                              <Eye className="w-3 h-3" />
+                              <span>{post.views}</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <MessageCircle className="w-3 h-3" />
+                              <span>{post.comments}</span>
+                            </div>
+                          </div>
+                          <button className="text-blue-600 dark:text-blue-400 text-sm font-medium hover:gap-2 transition-all inline-flex items-center gap-1">
+                            Tez orada <ChevronRight className="w-3 h-3" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Sidebar */}
+          <div className="space-y-6">
+            
+            {/* Popular Posts */}
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-md">
+              <div className="flex items-center gap-2 mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+                <TrendingUp className="w-5 h-5 text-orange-500" />
+                <h3 className="font-bold text-gray-900 dark:text-white">Eng o'qilganlar</h3>
+              </div>
+              <div className="space-y-4">
+                {popularPosts.map((post, i) => (
+                  <div key={post.id} className="flex items-start gap-3 group cursor-pointer">
+                    <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center text-white font-bold text-sm">
+                      {i + 1}
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="text-sm font-semibold text-gray-800 dark:text-gray-200 group-hover:text-blue-600 transition line-clamp-2">
+                        {post.title}
+                      </h4>
+                      <div className="flex items-center gap-2 text-xs text-gray-500 mt-1">
+                        <Eye className="w-3 h-3" />
+                        <span>{post.views} o'qish</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Categories List */}
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-md">
+              <div className="flex items-center gap-2 mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+                <Tag className="w-5 h-5 text-green-500" />
+                <h3 className="font-bold text-gray-900 dark:text-white">Kategoriyalar</h3>
+              </div>
+              <div className="space-y-2">
+                {categories.slice(1).map((cat) => (
+                  <button
+                    key={cat}
+                    onClick={() => setSelectedCategory(cat)}
+                    className="w-full text-left px-3 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition flex items-center justify-between group"
+                  >
+                    <span className="text-gray-700 dark:text-gray-300 text-sm">{cat}</span>
+                    <span className="text-xs text-gray-400 group-hover:text-blue-500">
+                      {allPosts.filter(p => p.category === cat).length}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Gallery Card */}
+            <Link to="/gallery" className="block bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-5 text-white shadow-md hover:shadow-xl transition-all group">
+              <div className="flex items-center gap-3 mb-3">
+                <Camera className="w-10 h-10 text-white/80" />
+                <div>
+                  <h3 className="font-bold text-lg">Maktab galereyasi</h3>
+                  <p className="text-white/70 text-sm">1500+ rasm va video</p>
+                </div>
+              </div>
+              <p className="text-white/80 text-sm mb-3">
+                Maktab hayotidan eng yaxshi lavhalar
+              </p>
+              <div className="flex items-center gap-1 text-sm font-medium group-hover:gap-2 transition-all">
+                Ko'rish <ArrowRight className="w-4 h-4" />
+              </div>
+            </Link>
+
+            {/* Newsletter */}
+            <div className="bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-800 rounded-2xl p-5 text-center">
+              <Heart className="w-10 h-10 text-red-500 mx-auto mb-3" />
+              <h3 className="font-bold text-gray-900 dark:text-white mb-2">Yangiliklardan xabardor bo'ling</h3>
+              <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
+                Eng so'nggi yangiliklarni birinchi bo'lib o'qing
+              </p>
+              <div className="flex gap-2">
+                <input
+                  type="email"
+                  placeholder="Email manzilingiz"
+                  className="flex-1 px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <button className="px-3 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg text-sm hover:shadow-lg transition">
+                  Obuna
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Load More */}
+        {filteredPosts.length > 0 && filteredPosts.length >= 6 && (
+          <div className="text-center mt-10">
+            <button className="px-6 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-700 dark:text-gray-300 font-medium hover:shadow-lg transition">
+              Ko'proq yuklash
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
-
-
