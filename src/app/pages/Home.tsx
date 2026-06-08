@@ -35,8 +35,20 @@ export function Home() {
   const [activeTestimonial, setActiveTestimonial] = useState(0);
   const [hoveredCard, setHoveredCard] = useState(null);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [showTestMode, setShowTestMode] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
 
-  // Scroll event handler - pasga tushgan sari tepada chiziq to'lib boradi
+  // Mobil ekranlarni aniqlash
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  // Scroll event handler
   useEffect(() => {
     const handleScroll = () => {
       const windowHeight = window.innerHeight;
@@ -47,7 +59,15 @@ export function Home() {
     };
     
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    
+    const timer = setTimeout(() => {
+      setShowTestMode(false);
+    }, 5000);
+    
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      clearTimeout(timer);
+    };
   }, []);
 
   const quickLinks = [
@@ -217,9 +237,53 @@ export function Home() {
   };
 
   return (
-    <div className="overflow-hidden bg-white dark:bg-gray-950">
-      {/* Progress Bar - Pasga tushgan sari chapdan o'nga to'lib boradi */}
-      <div className="fixed top-0 left-0 right-0 z-50 h-1 bg-gray-200 dark:bg-gray-700">
+    <div className="overflow-x-hidden bg-white dark:bg-gray-950 w-full">
+      {/* Test Mode Banner */}
+      <AnimatePresence>
+        {showTestMode && (
+          <motion.div
+            initial={{ opacity: 0, y: -100 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -100 }}
+            transition={{ duration: 0.5 }}
+            className="fixed top-0 left-0 right-0 z-50 overflow-hidden bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 shadow-2xl"
+          >
+            <div className="relative overflow-hidden py-2 md:py-3 px-8">
+              <motion.div
+                animate={!isMobile ? { x: ["-100%", "100%"] } : {}}
+                transition={{
+                  duration: 8,
+                  repeat: Infinity,
+                  ease: "linear",
+                }}
+                className="whitespace-nowrap"
+              >
+                <span className="inline-flex items-center gap-2 md:gap-3 text-white font-medium text-xs md:text-sm">
+                  <Sparkles className="w-3 h-3 md:w-4 md:h-4 text-yellow-300 animate-pulse" />
+                  🧪 TEST REJIMI — Bu sayt test asosida ishlayapti! Barcha ma'lumotlar va funksiyalar sinov tariqasida taqdim etilmoqda.
+                  {!isMobile && (
+                    <>
+                      <Sparkles className="w-3 h-3 md:w-4 md:h-4 text-yellow-300 animate-pulse" />
+                      🧪 TEST REJIMI — Bu sayt test asosida ishlayapti! Barcha ma'lumotlar va funksiyalar sinov tariqasida taqdim etilmoqda.
+                    </>
+                  )}
+                </span>
+              </motion.div>
+            </div>
+            <button
+              onClick={() => setShowTestMode(false)}
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-white/70 hover:text-white transition-colors"
+            >
+              <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Progress Bar */}
+      <div className="fixed top-0 left-0 right-0 z-50 h-1 bg-gray-200 dark:bg-gray-700" style={{ top: showTestMode ? (isMobile ? 40 : 48) : 0 }}>
         <motion.div
           className="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"
           style={{ width: `${scrollProgress}%` }}
@@ -229,9 +293,8 @@ export function Home() {
         />
       </div>
 
-      {/* Hero Section - NO PARALLAX, just static background */}
-      <section className="relative h-screen min-h-[700px] overflow-hidden">
-        {/* Static Background Image - no movement */}
+      {/* Hero Section */}
+      <section className="relative min-h-[600px] md:h-screen md:min-h-[700px] overflow-hidden pt-16 md:pt-0">
         <div className="absolute inset-0">
           <img 
             src="/maktab.jpg" 
@@ -241,13 +304,12 @@ export function Home() {
           <div className="absolute inset-0 bg-gradient-to-r from-gray-900/95 via-gray-900/80 to-transparent" />
         </div>
 
-        {/* Animated Shapes */}
         <div className="absolute inset-0 overflow-hidden">
           <motion.div
-            animate={{
+            animate={!isMobile ? {
               scale: [1, 1.2, 1],
               opacity: [0.3, 0.5, 0.3],
-            }}
+            } : {}}
             transition={{
               duration: 8,
               repeat: Infinity,
@@ -256,10 +318,10 @@ export function Home() {
             className="absolute top-20 left-10 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl"
           />
           <motion.div
-            animate={{
+            animate={!isMobile ? {
               scale: [1, 1.3, 1],
               opacity: [0.2, 0.4, 0.2],
-            }}
+            } : {}}
             transition={{
               duration: 10,
               repeat: Infinity,
@@ -270,31 +332,28 @@ export function Home() {
           />
         </div>
 
-        {/* Content */}
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center py-12 md:py-0">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1 }}
             className="text-white max-w-3xl"
           >
-            {/* Badge */}
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.5 }}
-              className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 px-4 py-2 rounded-full mb-8"
+              className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 px-3 py-1.5 md:px-4 md:py-2 rounded-full mb-6 md:mb-8"
             >
-              <Sparkles className="h-4 w-4 text-yellow-400" />
-              <span className="text-sm font-medium">O'zbekiston Top 10 maktabi</span>
+              <Sparkles className="h-3 w-3 md:h-4 md:w-4 text-yellow-400" />
+              <span className="text-xs md:text-sm font-medium">O'zbekiston Top 10 maktabi</span>
             </motion.div>
 
-            {/* Title */}
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.7 }}
-              className="text-5xl md:text-7xl font-bold mb-6 leading-tight"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold mb-4 md:mb-6 leading-tight"
             >
               Kelajakni
               <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">
@@ -302,141 +361,138 @@ export function Home() {
               </span>
             </motion.h1>
 
-            {/* Description */}
             <motion.p
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.9 }}
-              className="text-xl md:text-2xl text-white/80 mb-8 max-w-2xl leading-relaxed"
+              className="text-base md:text-xl lg:text-2xl text-white/80 mb-6 md:mb-8 max-w-2xl leading-relaxed"
             >
               69-IDUM - innovatsion ta'lim, tajribali ustozlar va 
               zamonaviy infratuzilma bilan kelajak avlodni tayyorlaymiz.
             </motion.p>
 
-            {/* CTA Buttons */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.1 }}
-              className="flex flex-wrap gap-4"
+              className="flex flex-wrap gap-3 md:gap-4"
             >
               <Link
                 to="/about"
-                className="group relative inline-flex items-center gap-2 bg-white text-gray-900 px-8 py-4 rounded-full font-semibold text-lg hover:shadow-2xl transition-all overflow-hidden"
+                className="group relative inline-flex items-center gap-2 bg-white text-gray-900 px-5 py-2.5 md:px-8 md:py-4 rounded-full font-semibold text-sm md:text-lg hover:shadow-2xl transition-all overflow-hidden"
               >
                 <span className="relative z-10">Batafsil ma'lumot</span>
-                <ArrowRight className="relative z-10 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="relative z-10 h-4 w-4 md:h-5 md:w-5 group-hover:translate-x-1 transition-transform" />
                 <motion.div
                   className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-400"
                   initial={{ x: "100%" }}
-                  whileHover={{ x: 0 }}
+                  whileHover={!isMobile ? { x: 0 } : {}}
                   transition={{ duration: 0.3 }}
                 />
               </Link>
             </motion.div>
 
-            {/* Stats */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.3 }}
-              className="flex gap-8 mt-12"
+              className="flex gap-6 md:gap-8 mt-8 md:mt-12 flex-wrap"
             >
               {[
                 { value: "39", label: "Yillik tajriba" },
                 { value: "45+", label: "Mutaxassis" },
                 { value: "1500+", label: "Bitiruvchilar" },
               ].map((stat, index) => (
-                <motion.div
-                  key={index}
-                  whileHover={{ y: -5 }}
-                  className="text-center"
-                >
-                  <div className="text-3xl font-bold">{stat.value}</div>
-                  <div className="text-sm text-white/60">{stat.label}</div>
-                </motion.div>
+                <div key={index} className="text-center">
+                  <div className="text-xl md:text-3xl font-bold">{stat.value}</div>
+                  <div className="text-xs md:text-sm text-white/60">{stat.label}</div>
+                </div>
               ))}
             </motion.div>
           </motion.div>
         </div>
 
-        {/* Scroll Indicator */}
-        <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{ repeat: Infinity, duration: 2 }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/50 flex flex-col items-center gap-2"
-        >
-          <span className="text-xs tracking-wider">SKROLL</span>
-          <ChevronRight className="h-4 w-4 rotate-90" />
-        </motion.div>
-
-        {/* Social Links */}
-        <motion.div
-          initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 1.5 }}
-          className="absolute right-8 bottom-8 flex flex-col gap-4"
-        >
-          {socialLinks.map((social, index) => (
-            <motion.a
-              key={index}
-              href={social.href}
-              whileHover={{ scale: 1.2, x: -5 }}
-              className={`text-white/60 hover:text-white transition-colors ${social.color}`}
+        {!isMobile && (
+          <>
+            <motion.div
+              animate={{ y: [0, 10, 0] }}
+              transition={{ repeat: Infinity, duration: 2 }}
+              className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/50 flex flex-col items-center gap-2"
             >
-              <social.icon className="h-5 w-5" />
-            </motion.a>
-          ))}
-        </motion.div>
+              <span className="text-xs tracking-wider">SKROLL</span>
+              <ChevronRight className="h-4 w-4 rotate-90" />
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 1.5 }}
+              className="absolute right-4 md:right-8 bottom-8 flex flex-col gap-3 md:gap-4"
+            >
+              {socialLinks.map((social, index) => (
+                <motion.a
+                  key={index}
+                  href={social.href}
+                  whileHover={{ scale: 1.2, x: -5 }}
+                  className={`text-white/60 hover:text-white transition-colors ${social.color}`}
+                >
+                  <social.icon className="h-4 w-4 md:h-5 md:w-5" />
+                </motion.a>
+              ))}
+            </motion.div>
+          </>
+        )}
       </section>
 
       {/* Features Section */}
-      <section className="py-24 bg-gray-50 dark:bg-gray-900">
+      <section className="py-12 md:py-24 bg-gray-50 dark:bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
-            className="text-center max-w-2xl mx-auto mb-16"
+            className="text-center max-w-2xl mx-auto mb-10 md:mb-16"
           >
-            <h2 className="text-4xl md:text-5xl font-light mb-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light mb-3 md:mb-4">
               Nega aynan{" "}
               <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
                 69-IDUM?
               </span>
             </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-400">
+            <p className="text-base md:text-xl text-gray-600 dark:text-gray-400">
               Eng yaxshi ta'lim va rivojlanish imkoniyatlari
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
             {features.map((feature, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                whileHover={{ y: -5 }}
-                onHoverStart={() => setHoveredCard(index)}
-                onHoverEnd={() => setHoveredCard(null)}
-                className="group relative bg-white dark:bg-gray-800 rounded-2xl p-8 hover:shadow-xl transition-all overflow-hidden"
+                transition={{ delay: isMobile ? 0 : index * 0.1 }}
+                whileHover={!isMobile ? { y: -5 } : {}}
+                onHoverStart={() => !isMobile && setHoveredCard(index)}
+                onHoverEnd={() => !isMobile && setHoveredCard(null)}
+                className="group relative bg-white dark:bg-gray-800 rounded-xl md:rounded-2xl p-5 md:p-8 hover:shadow-xl transition-all overflow-hidden"
               >
-                <motion.div
-                  animate={{
-                    scale: hoveredCard === index ? 1.5 : 1,
-                    opacity: hoveredCard === index ? 0.1 : 0,
-                  }}
-                  className={`absolute inset-0 ${feature.bgColor}`}
-                />
+                {!isMobile && (
+                  <motion.div
+                    animate={{
+                      scale: hoveredCard === index ? 1.5 : 1,
+                      opacity: hoveredCard === index ? 0.1 : 0,
+                    }}
+                    className={`absolute inset-0 ${feature.bgColor}`}
+                  />
+                )}
                 
-                <div className={`${feature.color} mb-4`}>
-                  <feature.icon className="h-10 w-10" />
+                <div className={`${feature.color} mb-3 md:mb-4`}>
+                  <feature.icon className="h-7 w-7 md:h-10 md:w-10" />
                 </div>
                 
-                <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-                <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+                <h3 className="text-lg md:text-xl font-semibold mb-1 md:mb-2">{feature.title}</h3>
+                <p className="text-gray-600 dark:text-gray-400 text-xs md:text-sm leading-relaxed">
                   {feature.description}
                 </p>
               </motion.div>
@@ -445,57 +501,56 @@ export function Home() {
         </div>
       </section>
 
-      {/* Quick Links */}
-      <section className="py-24 bg-gray-50 dark:bg-gray-900">
+      {/* Quick Links - Grid 2x3 on mobile */}
+      <section className="py-12 md:py-24 bg-gray-50 dark:bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center max-w-2xl mx-auto mb-16"
+            className="text-center max-w-2xl mx-auto mb-10 md:mb-16"
           >
-            <h2 className="text-4xl md:text-5xl font-light mb-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light mb-3 md:mb-4">
               Tezkor <span className="font-bold">bo'limlar</span>
             </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-400">
+            <p className="text-base md:text-xl text-gray-600 dark:text-gray-400">
               Sizni qiziqtirgan bo'limga tezda o'ting
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4">
             {quickLinks.map((link, index) => (
               <motion.div
                 key={link.href}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: link.delay }}
-                whileHover={{ y: -5 }}
+                transition={{ delay: isMobile ? 0 : link.delay }}
+                whileHover={!isMobile ? { y: -5 } : {}}
               >
                 <Link
                   to={link.href}
-                  className="group relative block bg-white dark:bg-gray-800 rounded-2xl p-6 hover:shadow-xl transition-all overflow-hidden"
+                  className="group relative block bg-white dark:bg-gray-800 rounded-xl md:rounded-2xl p-4 md:p-6 hover:shadow-xl transition-all overflow-hidden"
                 >
-                  <motion.div
-                    className={`absolute inset-0 bg-gradient-to-br ${link.gradient}`}
-                    initial={{ opacity: 0 }}
-                    whileHover={{ opacity: 1 }}
-                    transition={{ duration: 0.3 }}
-                  />
+                  {!isMobile && (
+                    <motion.div
+                      className={`absolute inset-0 bg-gradient-to-br ${link.gradient}`}
+                      initial={{ opacity: 0 }}
+                      whileHover={{ opacity: 1 }}
+                      transition={{ duration: 0.3 }}
+                    />
+                  )}
                   
                   <div className="relative z-10">
-                    <motion.div
-                      whileHover={{ scale: 1.1, rotate: 5 }}
-                      className={`bg-${link.color}-50 dark:bg-gray-700 w-14 h-14 rounded-xl flex items-center justify-center mb-4`}
-                    >
-                      <link.icon className={`h-7 w-7 text-${link.color}-600 dark:text-${link.color}-400 group-hover:text-white transition-colors`} />
-                    </motion.div>
+                    <div className={`bg-${link.color}-50 dark:bg-gray-700 w-10 h-10 md:w-14 md:h-14 rounded-xl flex items-center justify-center mb-2 md:mb-4`}>
+                      <link.icon className={`h-5 w-5 md:h-7 md:w-7 text-${link.color}-600 dark:text-${link.color}-400 md:group-hover:text-white transition-colors`} />
+                    </div>
                     
-                    <h3 className="font-semibold mb-1 group-hover:text-white transition-colors">
+                    <h3 className="font-semibold text-sm md:text-base mb-0.5 md:mb-1 md:group-hover:text-white transition-colors">
                       {link.title}
                     </h3>
                     
-                    <p className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-white/80 transition-colors">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 md:group-hover:text-white/80 transition-colors">
                       {link.description}
                     </p>
                   </div>
@@ -507,47 +562,49 @@ export function Home() {
       </section>
 
       {/* Achievements */}
-      <section className="py-24 bg-white dark:bg-gray-950">
+      <section className="py-12 md:py-24 bg-white dark:bg-gray-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center max-w-2xl mx-auto mb-16"
+            className="text-center max-w-2xl mx-auto mb-10 md:mb-16"
           >
-            <h2 className="text-4xl md:text-5xl font-light mb-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light mb-3 md:mb-4">
               So'nggi <span className="font-bold">yutuqlar</span>
             </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-400">
+            <p className="text-base md:text-xl text-gray-600 dark:text-gray-400">
               Maktabimiz faxrlanadigan natijalar
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
             {achievements.map((item, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.2 }}
-                whileHover={{ y: -5 }}
+                transition={{ delay: isMobile ? 0 : index * 0.2 }}
+                whileHover={!isMobile ? { y: -5 } : {}}
                 className="group relative"
               >
-                <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl blur opacity-30 group-hover:opacity-100 transition duration-300" />
+                {!isMobile && (
+                  <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl blur opacity-30 group-hover:opacity-100 transition duration-300" />
+                )}
                 
-                <div className="relative bg-white dark:bg-gray-800 rounded-2xl p-8 border border-gray-200 dark:border-gray-700">
+                <div className="relative bg-white dark:bg-gray-800 rounded-xl md:rounded-2xl p-5 md:p-8 border border-gray-200 dark:border-gray-700">
                   <motion.div
-                    whileHover={{ scale: 1.1, rotate: 360 }}
+                    whileHover={!isMobile ? { scale: 1.1, rotate: 360 } : {}}
                     transition={{ duration: 0.5 }}
-                    className={`inline-flex p-3 rounded-xl bg-gradient-to-r ${item.color} mb-4`}
+                    className={`inline-flex p-2 md:p-3 rounded-xl bg-gradient-to-r ${item.color} mb-3 md:mb-4`}
                   >
-                    <item.icon className="h-6 w-6 text-white" />
+                    <item.icon className="h-5 w-5 md:h-6 md:w-6 text-white" />
                   </motion.div>
                   
-                  <div className="text-sm text-blue-600 dark:text-blue-400 mb-2">{item.year}</div>
-                  <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
-                  <p className="text-gray-600 dark:text-gray-400">{item.description}</p>
+                  <div className="text-xs md:text-sm text-blue-600 dark:text-blue-400 mb-1 md:mb-2">{item.year}</div>
+                  <h3 className="text-base md:text-xl font-semibold mb-1 md:mb-2">{item.title}</h3>
+                  <p className="text-sm md:text-base text-gray-600 dark:text-gray-400">{item.description}</p>
                 </div>
               </motion.div>
             ))}
@@ -556,9 +613,9 @@ export function Home() {
       </section>
 
       {/* Stats with Counter */}
-      <section className="py-24 bg-gradient-to-br from-blue-600 to-purple-600 text-white">
+      <section className="py-12 md:py-24 bg-gradient-to-br from-blue-600 to-purple-600 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
             {[
               { icon: Users, value: 850, label: "O'quvchilar", delay: 0 },
               { icon: Award, value: 128, label: "Yutuqlar", delay: 0.1 },
@@ -570,20 +627,20 @@ export function Home() {
                 initial={{ opacity: 0, scale: 0.5 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
-                transition={{ delay: stat.delay, type: "spring" }}
+                transition={{ delay: isMobile ? 0 : stat.delay, type: "spring" }}
                 className="text-center"
               >
                 <motion.div
-                  whileHover={{ scale: 1.2, rotate: 360 }}
+                  whileHover={!isMobile ? { scale: 1.2, rotate: 360 } : {}}
                   transition={{ duration: 0.5 }}
-                  className="inline-flex p-4 bg-white/20 rounded-2xl backdrop-blur-sm mb-4"
+                  className="inline-flex p-2 md:p-4 bg-white/20 rounded-xl md:rounded-2xl backdrop-blur-sm mb-2 md:mb-4"
                 >
-                  <stat.icon className="h-8 w-8" />
+                  <stat.icon className="h-5 w-5 md:h-8 md:w-8" />
                 </motion.div>
-                <div className="text-4xl font-bold mb-2">
+                <div className="text-2xl md:text-4xl font-bold mb-1 md:mb-2">
                   <AnimatedCounter end={stat.value} />
                 </div>
-                <div className="text-white/80">{stat.label}</div>
+                <div className="text-white/80 text-xs md:text-base">{stat.label}</div>
               </motion.div>
             ))}
           </div>
@@ -591,82 +648,75 @@ export function Home() {
       </section>
 
       {/* Latest News */}
-      <section className="py-24 bg-gray-50 dark:bg-gray-900">
+      <section className="py-12 md:py-24 bg-gray-50 dark:bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="flex flex-wrap justify-between items-end mb-16"
+            className="flex flex-wrap justify-between items-end mb-8 md:mb-16 gap-4"
           >
             <div>
-              <h2 className="text-4xl md:text-5xl font-light mb-4">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light mb-2 md:mb-4">
                 So'nggi <span className="font-bold">yangiliklar</span>
               </h2>
-              <p className="text-xl text-gray-600 dark:text-gray-400">
+              <p className="text-base md:text-xl text-gray-600 dark:text-gray-400">
                 Maktab hayotidan eng so'nggi xabarlar
               </p>
             </div>
             
             <Link
               to="/blog"
-              className="group inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 font-semibold hover:gap-3 transition-all"
+              className="group inline-flex items-center gap-1 md:gap-2 text-blue-600 dark:text-blue-400 font-semibold text-sm md:text-base hover:gap-2 md:hover:gap-3 transition-all"
             >
               <span>Barcha yangiliklar</span>
-              <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="h-3 w-3 md:h-4 md:w-4 group-hover:translate-x-1 transition-transform" />
             </Link>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6">
             {news.map((item, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                whileHover={{ y: -10 }}
+                transition={{ delay: isMobile ? 0 : index * 0.1 }}
+                whileHover={!isMobile ? { y: -10 } : {}}
                 className="group cursor-pointer"
               >
-                <div className="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all">
-                  <div className="relative h-48 overflow-hidden">
+                <div className="bg-white dark:bg-gray-800 rounded-xl md:rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all">
+                  <div className="relative h-40 md:h-48 overflow-hidden">
                     <motion.img
-                      whileHover={{ scale: 1.1 }}
+                      whileHover={!isMobile ? { scale: 1.1 } : {}}
                       transition={{ duration: 0.6 }}
                       src={item.image}
                       alt={item.title}
                       className="w-full h-full object-cover"
                     />
-                    <motion.div
-                      initial={{ opacity: 0, x: -20 }}
-                      whileHover={{ opacity: 1, x: 0 }}
-                      className="absolute top-4 left-4 bg-blue-600 text-white px-3 py-1 rounded-full text-sm"
-                    >
+                    <div className="absolute top-3 left-3 md:top-4 md:left-4 bg-blue-600 text-white px-2 py-0.5 md:px-3 md:py-1 rounded-full text-xs md:text-sm">
                       {item.category}
-                    </motion.div>
+                    </div>
                   </div>
 
-                  <div className="p-6">
-                    <div className="flex items-center gap-2 text-sm text-gray-500 mb-3">
-                      <Calendar className="h-4 w-4" />
+                  <div className="p-4 md:p-6">
+                    <div className="flex items-center gap-1 md:gap-2 text-xs md:text-sm text-gray-500 mb-2 md:mb-3">
+                      <Calendar className="h-3 w-3 md:h-4 md:w-4" />
                       <span>{item.date}</span>
                     </div>
                     
-                    <h3 className="text-xl font-semibold mb-2 group-hover:text-blue-600 transition-colors">
+                    <h3 className="text-base md:text-xl font-semibold mb-1 md:mb-2 group-hover:text-blue-600 transition-colors">
                       {item.title}
                     </h3>
                     
-                    <p className="text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
+                    <p className="text-sm md:text-base text-gray-600 dark:text-gray-400 mb-3 md:mb-4 line-clamp-2">
                       {item.excerpt}
                     </p>
                     
-                    <motion.div
-                      whileHover={{ x: 5 }}
-                      className="inline-flex items-center gap-2 text-blue-600 font-semibold"
-                    >
+                    <div className="inline-flex items-center gap-1 md:gap-2 text-blue-600 font-semibold text-sm md:text-base">
                       <span>Batafsil</span>
-                      <ArrowRight className="h-4 w-4" />
-                    </motion.div>
+                      <ArrowRight className="h-3 w-3 md:h-4 md:w-4" />
+                    </div>
                   </div>
                 </div>
               </motion.div>
@@ -675,41 +725,45 @@ export function Home() {
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="py-24 bg-white dark:bg-gray-950">
+      {/* Testimonials - Mobile optimized with no side buttons */}
+      <section className="py-12 md:py-24 bg-white dark:bg-gray-950">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center max-w-2xl mx-auto mb-16"
+            className="text-center max-w-2xl mx-auto mb-10 md:mb-16"
           >
-            <h2 className="text-4xl md:text-5xl font-light mb-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light mb-3 md:mb-4">
               Ota-onalar <span className="font-bold">fikri</span>
             </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-400">
+            <p className="text-base md:text-xl text-gray-600 dark:text-gray-400">
               Biz haqimizda ular nima deydi
             </p>
           </motion.div>
 
           <div className="relative">
-            <motion.button
-              whileHover={{ scale: 1.1, x: -5 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={prevTestimonial}
-              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-12 lg:-translate-x-16 z-10 bg-white dark:bg-gray-800 p-3 rounded-full shadow-lg hover:shadow-xl transition-all"
-            >
-              <ChevronLeft className="h-5 w-5" />
-            </motion.button>
+            {!isMobile && (
+              <>
+                <motion.button
+                  whileHover={{ scale: 1.1, x: -5 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={prevTestimonial}
+                  className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-12 lg:-translate-x-16 z-10 bg-white dark:bg-gray-800 p-3 rounded-full shadow-lg hover:shadow-xl transition-all"
+                >
+                  <ChevronLeft className="h-5 w-5" />
+                </motion.button>
 
-            <motion.button
-              whileHover={{ scale: 1.1, x: 5 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={nextTestimonial}
-              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-12 lg:translate-x-16 z-10 bg-white dark:bg-gray-800 p-3 rounded-full shadow-lg hover:shadow-xl transition-all"
-            >
-              <ChevronRight className="h-5 w-5" />
-            </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.1, x: 5 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={nextTestimonial}
+                  className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-12 lg:translate-x-16 z-10 bg-white dark:bg-gray-800 p-3 rounded-full shadow-lg hover:shadow-xl transition-all"
+                >
+                  <ChevronRight className="h-5 w-5" />
+                </motion.button>
+              </>
+            )}
 
             <div className="overflow-hidden">
               <motion.div
@@ -720,43 +774,33 @@ export function Home() {
                 {testimonials.map((testimonial, index) => (
                   <motion.div
                     key={index}
-                    className="w-full flex-shrink-0 px-4"
+                    className="w-full flex-shrink-0 px-2 md:px-4"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.2 }}
                   >
-                    <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-3xl p-8 md:p-12">
-                      <motion.div
-                        animate={{
-                          rotate: [0, 5, -5, 0],
-                        }}
-                        transition={{
-                          duration: 2,
-                          repeat: Infinity,
-                          repeatType: "reverse",
-                        }}
-                      >
-                        <Quote className="h-12 w-12 text-blue-600/20 mb-6" />
-                      </motion.div>
+                    <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-xl md:rounded-3xl p-5 md:p-12">
+                      <div>
+                        <Quote className="h-8 w-8 md:h-12 md:w-12 text-blue-600/20 mb-3 md:mb-6" />
+                      </div>
                       
-                      <p className="text-xl md:text-2xl text-gray-700 dark:text-gray-300 mb-8 leading-relaxed">
+                      <p className="text-base md:text-xl lg:text-2xl text-gray-700 dark:text-gray-300 mb-5 md:mb-8 leading-relaxed">
                         "{testimonial.text}"
                       </p>
                       
-                      <div className="flex items-center gap-4">
-                        <motion.img
-                          whileHover={{ scale: 1.1 }}
+                      <div className="flex items-center gap-3 md:gap-4">
+                        <img
                           src="/rasm2.jpg"
                           alt={testimonial.name}
-                          className="w-16 h-16 rounded-full object-cover ring-4 ring-blue-100 dark:ring-gray-700"
+                          className="w-12 h-12 md:w-16 md:h-16 rounded-full object-cover ring-4 ring-blue-100 dark:ring-gray-700"
                         />
                         <div>
-                          <h4 className="font-semibold text-lg">{testimonial.name}</h4>
-                          <p className="text-gray-600 dark:text-gray-400">{testimonial.role}</p>
+                          <h4 className="font-semibold text-base md:text-lg">{testimonial.name}</h4>
+                          <p className="text-sm md:text-base text-gray-600 dark:text-gray-400">{testimonial.role}</p>
                           
-                          <div className="flex gap-1 mt-1">
+                          <div className="flex gap-0.5 md:gap-1 mt-1">
                             {[...Array(testimonial.rating)].map((_, i) => (
-                              <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                              <Star key={i} className="h-3 w-3 md:h-4 md:w-4 fill-yellow-400 text-yellow-400" />
                             ))}
                           </div>
                         </div>
@@ -767,18 +811,16 @@ export function Home() {
               </motion.div>
             </div>
 
-            <div className="flex justify-center gap-2 mt-8">
+            <div className="flex justify-center gap-2 mt-6 md:mt-8">
               {testimonials.map((_, index) => (
-                <motion.button
+                <button
                   key={index}
                   onClick={() => setActiveTestimonial(index)}
                   className={`h-2 rounded-full transition-all ${
                     activeTestimonial === index 
-                      ? "w-8 bg-blue-600" 
+                      ? "w-6 md:w-8 bg-blue-600" 
                       : "w-2 bg-gray-300 dark:bg-gray-700"
                   }`}
-                  whileHover={{ scale: 1.2 }}
-                  whileTap={{ scale: 0.9 }}
                 />
               ))}
             </div>
@@ -787,7 +829,7 @@ export function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="relative py-32 overflow-hidden">
+      <section className="relative py-16 md:py-32 overflow-hidden">
         <div className="absolute inset-0">
           <img 
             src="/maktab.jpg" 
@@ -797,32 +839,34 @@ export function Home() {
           <div className="absolute inset-0 bg-gradient-to-r from-gray-900/95 to-gray-900/90" />
         </div>
 
-        <div className="absolute inset-0 overflow-hidden">
-          <motion.div
-            animate={{
-              x: [0, 100, 0],
-              y: [0, -100, 0],
-            }}
-            transition={{
-              duration: 15,
-              repeat: Infinity,
-              ease: "linear",
-            }}
-            className="absolute top-20 left-20 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"
-          />
-          <motion.div
-            animate={{
-              x: [0, -100, 0],
-              y: [0, 100, 0],
-            }}
-            transition={{
-              duration: 18,
-              repeat: Infinity,
-              ease: "linear",
-            }}
-            className="absolute bottom-20 right-20 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"
-          />
-        </div>
+        {!isMobile && (
+          <div className="absolute inset-0 overflow-hidden">
+            <motion.div
+              animate={{
+                x: [0, 100, 0],
+                y: [0, -100, 0],
+              }}
+              transition={{
+                duration: 15,
+                repeat: Infinity,
+                ease: "linear",
+              }}
+              className="absolute top-20 left-20 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"
+            />
+            <motion.div
+              animate={{
+                x: [0, -100, 0],
+                y: [0, 100, 0],
+              }}
+              transition={{
+                duration: 18,
+                repeat: Infinity,
+                ease: "linear",
+              }}
+              className="absolute bottom-20 right-20 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"
+            />
+          </div>
+        )}
 
         <div className="relative z-10 max-w-3xl mx-auto text-center text-white px-4">
           <motion.div
@@ -835,7 +879,7 @@ export function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
-              className="text-4xl md:text-5xl font-bold mb-6"
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-6"
             >
               Farzandingiz kelajagi uchun
               <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">
@@ -848,7 +892,7 @@ export function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.3 }}
-              className="text-xl text-white/80 mb-10 leading-relaxed"
+              className="text-sm md:text-xl text-white/80 mb-6 md:mb-10 leading-relaxed px-2 md:px-0"
             >
               Bizning maktabimizda farzandingiz nafaqat bilim, balki hayotiy ko'nikmalar,
               do'stlik va muvaffaqiyat sirlarini o'rganadi.
@@ -859,33 +903,23 @@ export function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.4 }}
-              className="flex flex-wrap gap-4 justify-center"
+              className="flex flex-wrap gap-3 md:gap-4 justify-center"
             >
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+              <Link
+                to="/contact"
+                className="group inline-flex items-center gap-2 bg-white text-gray-900 px-5 py-2.5 md:px-8 md:py-4 rounded-full font-semibold text-sm md:text-lg hover:shadow-2xl transition-all"
               >
-                <Link
-                  to="/contact"
-                  className="group inline-flex items-center gap-2 bg-white text-gray-900 px-8 py-4 rounded-full font-semibold text-lg hover:shadow-2xl transition-all"
-                >
-                  <span>Qabulga yozilish</span>
-                  <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </motion.div>
+                <span>Qabulga yozilish</span>
+                <ArrowRight className="h-4 w-4 md:h-5 md:w-5 group-hover:translate-x-1 transition-transform" />
+              </Link>
 
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+              <Link
+                to="/about"
+                className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/30 text-white px-5 py-2.5 md:px-8 md:py-4 rounded-full font-semibold text-sm md:text-lg hover:bg-white/20 transition-all"
               >
-                <Link
-                  to="/about"
-                  className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/30 text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-white/20 transition-all"
-                >
-                  <BookOpen className="h-5 w-5" />
-                  <span>Maktab bilan tanishing</span>
-                </Link>
-              </motion.div>
+                <BookOpen className="h-4 w-4 md:h-5 md:w-5" />
+                <span>Maktab bilan tanishing</span>
+              </Link>
             </motion.div>
 
             <motion.div
@@ -893,34 +927,20 @@ export function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.5 }}
-              className="flex flex-wrap justify-center gap-8 mt-12 text-white/70"
+              className="flex flex-wrap justify-center gap-4 md:gap-8 mt-8 md:mt-12 text-white/70 text-xs md:text-sm"
             >
-              <motion.a
-                whileHover={{ scale: 1.05, color: "#fff" }}
-                href="tel:+998950571017"
-                className="flex items-center gap-2"
-              >
-                <Phone className="h-4 w-4" />
+              <a href="tel:+998950571017" className="flex items-center gap-1 md:gap-2">
+                <Phone className="h-3 w-3 md:h-4 md:w-4" />
                 <span>+998 95 057 10 17</span>
-              </motion.a>
-              <motion.a
-                whileHover={{ scale: 1.05, color: "#fff" }}
-                href="https://maps.google.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2"
-              >
-                <MapPin className="h-4 w-4" />
+              </a>
+              <a href="https://maps.google.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 md:gap-2">
+                <MapPin className="h-3 w-3 md:h-4 md:w-4" />
                 <span>Andijon vil, Paxtaobod tumani</span>
-              </motion.a>
-              <motion.a
-                whileHover={{ scale: 1.05, color: "#fff" }}
-                href="mailto:ziyodulloerkinov906@gmail.com"
-                className="flex items-center gap-2"
-              >
-                <Mail className="h-4 w-4" />
+              </a>
+              <a href="mailto:ziyodulloerkinov906@gmail.com" className="flex items-center gap-1 md:gap-2">
+                <Mail className="h-3 w-3 md:h-4 md:w-4" />
                 <span>ziyodulloerkinov906@gmail.com</span>
-              </motion.a>
+              </a>
             </motion.div>
           </motion.div>
         </div>
